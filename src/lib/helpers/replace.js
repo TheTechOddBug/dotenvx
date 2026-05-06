@@ -45,29 +45,24 @@ function replace (src, key, replaceValue) {
   let output
   let newPart = ''
 
-  const parsed = dotenvParse(src, true, true) // skip expanding \n and skip converting \r\n
+  const parsed = dotenvParse(src, true, true, true) // skip expanding \n and skip converting \r\n
   if (Object.prototype.hasOwnProperty.call(parsed, key)) {
-    const allValues = dotenvParse(src, true, true, true)[key]
-    if (Array.isArray(allValues)) {
-      let duplicateOutput = src
-      const replacements = Array.isArray(replaceValue) ? replaceValue : allValues.map(() => replaceValue)
-      const replacementByValue = new Map()
+    const allValues = parsed[key]
+    let duplicateOutput = src
+    const replacements = Array.isArray(replaceValue) ? replaceValue : allValues.map(() => replaceValue)
+    const replacementByValue = new Map()
 
-      allValues.forEach((value, index) => {
-        if (!replacementByValue.has(value)) {
-          replacementByValue.set(value, replacements[index])
-        }
-      })
-
-      for (const [value, replacement] of replacementByValue) {
-        duplicateOutput = replaceExistingValue(duplicateOutput, key, value, replacement)
+    allValues.forEach((value, index) => {
+      if (!replacementByValue.has(value)) {
+        replacementByValue.set(value, replacements[index])
       }
+    })
 
-      return duplicateOutput
+    for (const [value, replacement] of replacementByValue) {
+      duplicateOutput = replaceExistingValue(duplicateOutput, key, value, replacement)
     }
 
-    const originalValue = parsed[key]
-    output = replaceExistingValue(src, key, originalValue, replaceValue)
+    return duplicateOutput
   } else {
     newPart += `${key}="${replaceValue}"`
 
