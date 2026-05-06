@@ -386,6 +386,62 @@ t.test('#runSync (encrypt off) updates every duplicate HELLO with plaintext valu
     ct.end()
   })
 
+t.test('#runSync (encrypt off) updates duplicate HELLO when target equals last duplicate',
+  async ct => {
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-sets-duplicate-'))
+    const envFile = path.join(tmpdir, '.env')
+    fs.writeFileSync(envFile, 'HELLO=one\nHELLO=two\n', 'utf8')
+    const envs = [{ type: 'envFile', value: envFile }]
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Sets('HELLO', 'two', envs, false).runSync()
+
+    const row = processedEnvs[0]
+
+    ct.same(changedFilepaths, [envFile])
+    ct.same(unchangedFilepaths, [])
+    ct.same(helloValues(row.envSrc), ['two', 'two'])
+    ct.equal(row.originalValue, 'two', 'last duplicate value remains the parsed original value')
+
+    ct.end()
+  })
+
+t.test('#runSync (encrypt on) updates duplicate HELLO when target equals last encrypted duplicate',
+  async ct => {
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-sets-duplicate-'))
+    const envFile = path.join(tmpdir, '.env')
+    const encryptedTwo = encryptValue('two', PUBLIC_KEY)
+    const envSrc = [
+      `DOTENV_PUBLIC_KEY="${PUBLIC_KEY}"`,
+      'HELLO=one',
+      `HELLO="${encryptedTwo}"`
+    ].join('\n') + '\n'
+    fs.writeFileSync(envFile, envSrc, 'utf8')
+    process.env.DOTENV_PRIVATE_KEY = PRIVATE_KEY
+    const envs = [{ type: 'envFile', value: envFile }]
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Sets('HELLO', 'two', envs, true, null, true).runSync()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(changedFilepaths, [envFile])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(value => value.startsWith('encrypted:')), 'encrypts every duplicate HELLO entry')
+    ct.same(decryptHelloValues(row.envSrc, row.privateKeyName, row.privateKey), ['two', 'two'])
+    ct.equal(row.originalValue, 'two', 'last duplicate encrypted value remains the parsed original value')
+
+    ct.end()
+  })
+
 t.test('#run (no env file)',
   async ct => {
     const cwd = process.cwd()
@@ -1176,6 +1232,37 @@ t.test('#run (finds .env file) with --encrypt and existing public key only',
     ct.same(changedFilepaths, ['tests/monorepo/apps/encrypted/.env'])
 
     sandbox.restore()
+    ct.end()
+  })
+
+t.test('#runSync (encrypt on) replaces duplicate encrypted HELLO entries with public key only',
+  async ct => {
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-sets-duplicate-'))
+    const envFile = path.join(tmpdir, '.env')
+    const envSrc = [
+      `DOTENV_PUBLIC_KEY="${PUBLIC_KEY}"`,
+      `HELLO="${encryptValue('one', PUBLIC_KEY)}"`,
+      `HELLO="${encryptValue('two', PUBLIC_KEY)}"`
+    ].join('\n') + '\n'
+    fs.writeFileSync(envFile, envSrc, 'utf8')
+    const envs = [{ type: 'envFile', value: envFile }]
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Sets('HELLO', 'two', envs, true, null, true).runSync()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(changedFilepaths, [envFile])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(row.privateKey, undefined)
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(value => value.startsWith('encrypted:')), 'encrypts every duplicate HELLO entry')
+    ct.same(values, [row.encryptedValue, row.encryptedValue])
+
     ct.end()
   })
 
