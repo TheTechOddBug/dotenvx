@@ -7,6 +7,7 @@ const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 
 const dotenvParse = require('../../../src/lib/helpers/dotenvParse')
+const decryptKeyValue = require('../../../src/lib/helpers/cryptography/decryptKeyValue')
 
 const Encrypt = require('../../../src/lib/services/encrypt')
 
@@ -22,6 +23,14 @@ function cleanupRootEnvFiles () {
   if (fs.existsSync(ROOT_ENV_KEYS_FILE)) {
     fs.unlinkSync(ROOT_ENV_KEYS_FILE)
   }
+}
+
+function helloValues (envSrc) {
+  return dotenvParse(envSrc, false, false, true).HELLO || []
+}
+
+function decryptHelloValues (envSrc, privateKeyName, privateKey) {
+  return helloValues(envSrc).map(value => decryptKeyValue('HELLO', value, privateKeyName, privateKey))
 }
 
 t.beforeEach((ct) => {
@@ -298,6 +307,96 @@ t.test('#run (finds .env file already encrypted)',
     ct.same(changedFilepaths, [])
     ct.same(unchangedFilepaths, ['tests/monorepo/apps/encrypted/.env'])
 
+    ct.end()
+  })
+
+t.test('#run encrypts every duplicate HELLO when both entries start plaintext',
+  async ct => {
+    const cwd = process.cwd()
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-encrypt-duplicate-'))
+    process.chdir(tmpdir)
+
+    fs.writeFileSync('.env', 'HELLO=one\nHELLO=two\n', 'utf8')
+    writeFileXStub.callsFake(async (filepath, str) => fs.writeFileSync(filepath, str, 'utf8'))
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Encrypt([{ type: 'envFile', value: '.env' }], [], [], null, true).run()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(changedFilepaths, ['.env'])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(value => value.startsWith('encrypted:')), 'encrypts every duplicate HELLO entry')
+    ct.same(decryptHelloValues(row.envSrc, row.privateKeyName, row.privateKey), ['one', 'two'])
+
+    process.chdir(cwd)
+    ct.end()
+  })
+
+t.test('#run encrypts appended plaintext duplicate HELLO when an earlier entry is already encrypted',
+  async ct => {
+    const cwd = process.cwd()
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-encrypt-duplicate-'))
+    process.chdir(tmpdir)
+
+    fs.writeFileSync('.env', 'HELLO=one\n', 'utf8')
+    writeFileXStub.callsFake(async (filepath, str) => fs.writeFileSync(filepath, str, 'utf8'))
+
+    const firstRun = await new Encrypt([{ type: 'envFile', value: '.env' }], [], [], null, true).run()
+    fs.writeFileSync('.env', `${firstRun.processedEnvs[0].envSrc}HELLO=two\n`, 'utf8')
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Encrypt([{ type: 'envFile', value: '.env' }], [], [], null, true).run()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(changedFilepaths, ['.env'])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(value => value.startsWith('encrypted:')), 'encrypts every duplicate HELLO entry')
+    ct.same(decryptHelloValues(row.envSrc, row.privateKeyName, row.privateKey), ['one', 'two'])
+
+    process.chdir(cwd)
+    ct.end()
+  })
+
+t.test('#run encrypts prepended plaintext duplicate HELLO when a later entry is already encrypted',
+  async ct => {
+    const cwd = process.cwd()
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-encrypt-duplicate-'))
+    process.chdir(tmpdir)
+
+    fs.writeFileSync('.env', 'HELLO=one\n', 'utf8')
+    writeFileXStub.callsFake(async (filepath, str) => fs.writeFileSync(filepath, str, 'utf8'))
+
+    const firstRun = await new Encrypt([{ type: 'envFile', value: '.env' }], [], [], null, true).run()
+    fs.writeFileSync('.env', `HELLO=two\n${firstRun.processedEnvs[0].envSrc}`, 'utf8')
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Encrypt([{ type: 'envFile', value: '.env' }], [], [], null, true).run()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(changedFilepaths, ['.env'])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(value => value.startsWith('encrypted:')), 'encrypts every duplicate HELLO entry')
+    ct.same(decryptHelloValues(row.envSrc, row.privateKeyName, row.privateKey), ['two', 'one'])
+
+    process.chdir(cwd)
     ct.end()
   })
 
