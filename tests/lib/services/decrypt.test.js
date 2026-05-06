@@ -6,9 +6,17 @@ const path = require('path')
 const sinon = require('sinon')
 const dotenv = require('dotenv')
 
+const dotenvParse = require('../../../src/lib/helpers/dotenvParse')
+const encryptValue = require('../../../src/lib/helpers/cryptography/encryptValue')
 const Decrypt = require('../../../src/lib/services/decrypt')
 
 let writeFileXStub
+const PUBLIC_KEY = '02b106c30579baf896ae1fddf077cbcb4fef5e7d457932974878dcb51f42b45498'
+const PRIVATE_KEY = '1fc1cafa954a7a2bf0a6fbff46189c9e03e3a66b4d1133108ab9fcdb9e154b70'
+
+function helloValues (envSrc) {
+  return dotenvParse(envSrc, false, false, true).HELLO || []
+}
 
 t.beforeEach((ct) => {
   // important, clear process.env before each test
@@ -137,6 +145,38 @@ t.test('#run (finds .env file)',
     ct.same(Object.keys(parsed), ['DOTENV_PUBLIC_KEY', 'HELLO'])
     ct.ok(parsed.DOTENV_PUBLIC_KEY, 'DOTENV_PUBLIC_KEY should not be empty')
     ct.same(parsed.HELLO, 'encrypted') // the decrypted value is 'encrypted'
+
+    ct.end()
+  })
+
+t.test('#run decrypts duplicate HELLO entries while preserving plaintext duplicates',
+  async ct => {
+    const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-decrypt-duplicate-'))
+    const envFile = path.join(tmpdir, '.env')
+    const encryptedOne = encryptValue('one', PUBLIC_KEY)
+    const encryptedThree = encryptValue('three', PUBLIC_KEY)
+    const envSrc = [
+      `DOTENV_PUBLIC_KEY="${PUBLIC_KEY}"`,
+      `HELLO="${encryptedOne}"`,
+      'HELLO=two',
+      `HELLO="${encryptedThree}"`
+    ].join('\n') + '\n'
+
+    fs.writeFileSync(envFile, envSrc, 'utf8')
+    process.env.DOTENV_PRIVATE_KEY = PRIVATE_KEY
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Decrypt([{ type: 'envFile', value: envFile }]).run()
+
+    const row = processedEnvs[0]
+
+    ct.same(row.keys, ['HELLO'])
+    ct.same(changedFilepaths, [envFile])
+    ct.same(unchangedFilepaths, [])
+    ct.same(helloValues(row.envSrc), ['one', 'two', 'three'])
 
     ct.end()
   })

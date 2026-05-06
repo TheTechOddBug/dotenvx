@@ -7,10 +7,33 @@ const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 
 const dotenvParse = require('../../../src/lib/helpers/dotenvParse')
+const { encryptValue, decryptKeyValue, isEncrypted } = require('../../../src/lib/helpers/cryptography')
 
 const Rotate = require('../../../src/lib/services/rotate')
 
 let writeFileXStub
+
+const PUBLIC_KEY = '03eaf2142ab3d55bdf108962334e06696db798e7412cfc51d75e74b4f87f299bba'
+const PRIVATE_KEY = 'ec9e80073d7ace817d35acb8b7293cbf8e5981b4d2f5708ee5be405122993cd1'
+
+function helloValues (envSrc) {
+  return dotenvParse(envSrc, false, false, true).HELLO || []
+}
+
+function decryptHelloValues (envSrc, privateKeyName, privateKey) {
+  return helloValues(envSrc).map(value => decryptKeyValue('HELLO', value, privateKeyName, privateKey))
+}
+
+function writeDuplicateRotateFiles (envSrc) {
+  const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-rotate-duplicate-'))
+  const envFile = path.join(tmpdir, '.env')
+  const envKeysFile = path.join(tmpdir, '.env.keys')
+
+  fs.writeFileSync(envFile, envSrc, 'utf8')
+  fs.writeFileSync(envKeysFile, `DOTENV_PRIVATE_KEY="${PRIVATE_KEY}"\n`, 'utf8')
+
+  return { envFile, envKeysFile }
+}
 
 t.beforeEach((ct) => {
   // important, clear process.env before each test
@@ -416,6 +439,62 @@ t.test('#run (finds .env file excluding specified key globbed)',
     ct.same(parsed.HELLO, originalParsed.HELLO, 'HELLO should be same after rotation because it was excluded')
     ct.not(parsed.DOTENV_PUBLIC_KEY, originalParsed.DOTENV_PUBLIC_KEY, 'DOTENV_PUBLIC_KEY should differ after rotation')
     ct.not(parsedKeys.DOTENV_PRIVATE_KEY, originalKeysParsed.DOTENV_PRIVATE_KEY, 'DOTENV_PRIVATE_KEY should differ after rotation')
+
+    ct.end()
+  })
+
+t.test('#run rotates duplicate HELLO when plaintext duplicate is last',
+  async ct => {
+    const { envFile, envKeysFile } = writeDuplicateRotateFiles([
+      `DOTENV_PUBLIC_KEY="${PUBLIC_KEY}"`,
+      `HELLO="${encryptValue('one', PUBLIC_KEY)}"`,
+      'HELLO=two'
+    ].join('\n') + '\n')
+    const envs = [{ type: 'envFile', value: envFile }]
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Rotate(envs, [], [], envKeysFile, true).run()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(row.keys, ['HELLO'])
+    ct.same(changedFilepaths, [envFile])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(isEncrypted), 'encrypts every duplicate HELLO entry')
+    ct.same(decryptHelloValues(row.envSrc, row.privateKeyName, row.privateKey), ['one', 'one'])
+
+    ct.end()
+  })
+
+t.test('#run rotates duplicate encrypted HELLO using the last encrypted duplicate value',
+  async ct => {
+    const { envFile, envKeysFile } = writeDuplicateRotateFiles([
+      `DOTENV_PUBLIC_KEY="${PUBLIC_KEY}"`,
+      `HELLO="${encryptValue('one', PUBLIC_KEY)}"`,
+      `HELLO="${encryptValue('two', PUBLIC_KEY)}"`
+    ].join('\n') + '\n')
+    const envs = [{ type: 'envFile', value: envFile }]
+
+    const {
+      processedEnvs,
+      changedFilepaths,
+      unchangedFilepaths
+    } = await new Rotate(envs, [], [], envKeysFile, true).run()
+
+    const row = processedEnvs[0]
+    const values = helloValues(row.envSrc)
+
+    ct.same(row.keys, ['HELLO'])
+    ct.same(changedFilepaths, [envFile])
+    ct.same(unchangedFilepaths, [])
+    ct.equal(values.length, 2, 'preserves both duplicate HELLO entries')
+    ct.ok(values.every(isEncrypted), 'encrypts every duplicate HELLO entry')
+    ct.same(decryptHelloValues(row.envSrc, row.privateKeyName, row.privateKey), ['two', 'two'])
 
     ct.end()
   })

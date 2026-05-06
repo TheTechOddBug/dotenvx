@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v1.64.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v1.65.0...main)
+
+## [1.65.0](https://github.com/dotenvx/dotenvx/compare/v1.64.0...v1.65.0) (2026-05-05)
+
+### Added
+
+* Add support for `replace`ing duplicate keys with different values ([#806](https://github.com/dotenvx/dotenvx/pull/806))
 
 ## [1.64.0](https://github.com/dotenvx/dotenvx/compare/v1.63.0...v1.64.0) (2026-04-27)
 
