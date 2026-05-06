@@ -1693,6 +1693,29 @@ BAR=`)
   ct.end()
 })
 
+t.test('#replace when dotted key is blank does not count newlines from regex-like key', ct => {
+  const src = `# Similar key with extra newlines
+DxOyTzS=
+
+
+# Dotted key
+D.O.T.S=
+# My Bar
+BAR=`
+
+  const newSrc = replace(src, 'D.O.T.S', 'encrypted:1234')
+  ct.same(newSrc, `# Similar key with extra newlines
+DxOyTzS=
+
+
+# Dotted key
+D.O.T.S=encrypted:1234
+# My Bar
+BAR=`)
+
+  ct.end()
+})
+
 t.test('#replace when single quotes and newline', ct => {
   const src = `# My blank foo
 FOO=''
