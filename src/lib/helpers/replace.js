@@ -3,6 +3,54 @@ const dotenvParse = require('./dotenvParse')
 const escapeForRegex = require('./escapeForRegex')
 const escapeDollarSigns = require('./escapeDollarSigns')
 
+function unquoteValue (value) {
+  value = (value || '').trim()
+
+  const maybeQuote = value[0]
+  value = value.replace(/^(['"`])([\s\S]*)\1$/mg, '$2')
+
+  return { quote: maybeQuote === value[0] ? '' : maybeQuote, value }
+}
+
+function replacementValueAt (replaceValue, index) {
+  if (Array.isArray(replaceValue)) {
+    return replaceValue[index]
+  }
+
+  return replaceValue
+}
+
+function replaceExistingKey (src, key, replaceValue) {
+  const escapedKey = escapeForRegex(key)
+  let index = 0
+
+  const currentPart = new RegExp(
+    '^' + // start of line
+    '(\\s*)?' + // spaces
+    '(export\\s+)?' + // export
+    escapedKey + // KEY
+    '[^\\S\\r\\n]*=[^\\S\\r\\n]*' + // spaces (KEY = value)
+    '(' +
+      '[^\\S\\r\\n]*\'(?:\\\\\'|[^\'])*\'' + // single quoted
+      '|[^\\S\\r\\n]*"(?:\\\\"|[^"])*"' + // double quoted
+      '|[^\\S\\r\\n]*`(?:\\\\`|[^`])*`' + // backtick quoted
+      '|[^#\\r\\n]*?' + // unquoted
+    ')' +
+    '([^\\S\\r\\n]*(?:#.*)?)' + // comment
+    '(?=$|\\r?\\n)' // end of line
+    ,
+    'gm'
+  )
+
+  return src.replace(currentPart, function (match, spaces = '', exportPart = '', rawValue = '', suffix = '') {
+    const { quote } = unquoteValue(rawValue)
+    const newPart = `${key}=${quote}${replacementValueAt(replaceValue, index)}${quote}`
+    index += 1
+
+    return `${spaces}${exportPart}${newPart}${suffix}`
+  })
+}
+
 function replace (src, key, replaceValue) {
   let output
   let newPart = ''
@@ -10,6 +58,10 @@ function replace (src, key, replaceValue) {
   const parsed = dotenvParse(src, true, true) // skip expanding \n and skip converting \r\n
   const _quotes = quotes(src)
   if (Object.prototype.hasOwnProperty.call(parsed, key)) {
+    if (Array.isArray(dotenvParse(src, true, true, true)[key])) {
+      return replaceExistingKey(src, key, replaceValue)
+    }
+
     const quote = _quotes[key]
     newPart += `${key}=${quote}${replaceValue}${quote}`
 

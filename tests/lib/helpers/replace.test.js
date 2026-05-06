@@ -1744,15 +1744,28 @@ BAR=`)
   ct.end()
 })
 
-t.test('#replace doesn\'t replace all duplicate keys. replaces the last.', ct => {
+t.test('#replace replaces all duplicate keys.', ct => {
   const src = `# duplicate keys
 HELLO=one
 HELLO=two`
 
   const newSrc = replace(src, 'HELLO', 'encrypted:1234')
   ct.same(newSrc, `# duplicate keys
-HELLO=one
+HELLO=encrypted:1234
 HELLO=encrypted:1234`)
+
+  ct.end()
+})
+
+t.test('#replace replaces duplicate keys with replacement values in order.', ct => {
+  const src = `# duplicate keys
+HELLO=one
+HELLO=two`
+
+  const newSrc = replace(src, 'HELLO', ['encrypted:one', 'encrypted:two'])
+  ct.same(newSrc, `# duplicate keys
+HELLO=encrypted:one
+HELLO=encrypted:two`)
 
   ct.end()
 })
