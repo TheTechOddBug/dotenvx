@@ -4,12 +4,29 @@ const path = require('path')
 const ignore = require('ignore')
 
 const ls = require('../resolvers/ls')
-const { sealed } = require('@dotenvx/primitives')
+const { encrypted, scan } = require('@dotenvx/primitives')
+const { isDotenvPublicKey, isPlainKey } = require('../helpers/cryptography')
 
 const InstallPrecommitHook = require('./../helpers/installPrecommitHook')
 const Errors = require('./../helpers/errors')
 const childProcess = require('child_process')
 const MISSING_GITIGNORE = '.env.keys' // by default only ignore .env.keys. all other .env* files COULD be included - as long as they are encrypted
+
+function sealed (src) {
+  const { parsed } = scan(src)
+  for (const [name, values] of Object.entries(parsed)) {
+    if (isDotenvPublicKey(name) || isPlainKey(name)) {
+      continue
+    }
+
+    for (const value of values) {
+      if (!encrypted(value)) {
+        return false
+      }
+    }
+  }
+  return true
+}
 
 class Precommit {
   constructor (directory = './', options = {}) {
