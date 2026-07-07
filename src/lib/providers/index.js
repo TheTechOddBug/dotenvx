@@ -43,23 +43,30 @@ function armorProviderForOptions (options) {
   })
 }
 
+function useKeychain (options) {
+  return options.noKeychain !== true && options.keychain !== false
+}
+
 async function providers (options = {}) {
   if (Object.prototype.hasOwnProperty.call(options, 'provider')) {
     return options.provider
   }
 
   if (options.noArmor || options.armor === false) {
-    return keychainProvider
+    return useKeychain(options) ? keychainProvider : null
   }
 
   const sesh = new Session()
   const noArmor = !options.token && await sesh.noArmor()
-  if (noArmor) return keychainProvider
+  if (noArmor) return useKeychain(options) ? keychainProvider : null
 
-  return composeProviders([
-    keychainProvider,
+  const providerFns = [
     armorProviderForOptions(options)
-  ])
+  ]
+
+  if (useKeychain(options)) providerFns.unshift(keychainProvider)
+
+  return composeProviders(providerFns)
 }
 
 providers.sync = function providersSync (options = {}) {
@@ -68,17 +75,20 @@ providers.sync = function providersSync (options = {}) {
   }
 
   if (options.noArmor || options.armor === false) {
-    return keychainProvider
+    return useKeychain(options) ? keychainProvider : null
   }
 
   const sesh = new Session()
   const noArmor = !options.token && sesh.noArmorSync()
-  if (noArmor) return keychainProvider
+  if (noArmor) return useKeychain(options) ? keychainProvider : null
 
-  return composeProvidersSync([
-    keychainProvider,
+  const providerFns = [
     syncArmorProvider
-  ])
+  ]
+
+  if (useKeychain(options)) providerFns.unshift(keychainProvider)
+
+  return composeProvidersSync(providerFns)
 }
 
 module.exports = providers

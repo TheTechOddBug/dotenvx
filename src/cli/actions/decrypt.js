@@ -17,6 +17,7 @@ async function decrypt () {
   const envs = this.envs
   const sesh = new Session()
   const noArmor = options.armor === false || (await sesh.noArmor())
+  const noKeychain = options.keychain === false || options.noKeychain === true
 
   let errorCount = 0
 
@@ -30,6 +31,7 @@ async function decrypt () {
       ek: options.excludeKey,
       fk: options.envKeysFile,
       noArmor,
+      noKeychain,
       onStatus: (text) => {
         if (spinner && text) {
           spinner.text = text
@@ -64,6 +66,7 @@ async function decrypt () {
         ek: options.excludeKey,
         fk: options.envKeysFile,
         noArmor,
+        noKeychain,
         onStatus: (text) => {
           if (spinner && text) {
             spinner.text = text

@@ -73,6 +73,7 @@ program.command('run')
   .option('--ignore <errorCodes...>', 'error code(s) to ignore (example: --ignore=MISSING_ENV_FILE)')
   .option('--token <token>', 'set Armor ⛨ token')
   .option('--no-armor', 'disable dotenvx-armor features')
+  .option('--no-keychain', 'disable macOS Keychain features')
   .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
@@ -96,6 +97,7 @@ program.command('get')
   .option('--pp', 'pretty print output (alias)')
   .option('--format <type>', 'format of the output (json, shell, colon, eval)', 'json')
   .option('--no-armor', 'disable dotenvx-armor features')
+  .option('--no-keychain', 'disable macOS Keychain features')
   .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
@@ -116,6 +118,7 @@ program.command('set')
   .option('-p, --plain', 'store value as plain text', false)
   .option('--no-create', 'do not create .env file(s) when missing')
   .option('--no-armor', 'disable dotenvx-armor features')
+  .option('--no-keychain', 'disable macOS Keychain features')
   .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
@@ -133,6 +136,7 @@ program.command('encrypt')
   .option('--token <token>', 'set Armor ⛨ token')
   .option('--no-create', 'do not create .env file(s) when missing')
   .option('--no-armor', 'disable dotenvx-armor features')
+  .option('--no-keychain', 'disable macOS Keychain features')
   .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
@@ -147,6 +151,7 @@ program.command('decrypt')
   .option('-k, --key <keys...>', 'keys(s) to decrypt (default: all keys in file)')
   .option('-ek, --exclude-key <excludeKeys...>', 'keys(s) to exclude from decryption (default: none)')
   .option('--no-armor', 'disable dotenvx-armor features')
+  .option('--no-keychain', 'disable macOS Keychain features')
   .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .option('--stdout', 'send to stdout')
   .action(function (...args) {
@@ -162,6 +167,7 @@ program.command('keypair')
   .option('-f, --env-file <path>', 'path(s) to your env file(s)')
   .option('-fk, --env-keys-file <path>', 'path to your .env.keys file (default: same path as your env file)')
   .option('--no-armor', 'disable dotenvx-armor features')
+  .option('--no-keychain', 'disable macOS Keychain features')
   .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .option('-pp, --pretty-print', 'pretty print output')
   .option('--pp', 'pretty print output (alias)')

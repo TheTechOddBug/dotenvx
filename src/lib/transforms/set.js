@@ -36,6 +36,7 @@ async function setTransform (options = {}) {
   const value = options.value
   const fk = options.fk || '.env.keys'
   let noArmor = options.noArmor // key storage selector below
+  const noKeychain = options.noKeychain
   const noCreate = options.noCreate
   const noEncrypt = !options.encrypt || isPlainKey(key)
 
@@ -149,7 +150,8 @@ async function setTransform (options = {}) {
           envs: [env],
           all: true,
           envKeysFile: fk,
-          noArmor
+          noArmor,
+          noKeychain
         })
 
         const before = parsed[key]

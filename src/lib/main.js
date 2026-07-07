@@ -66,6 +66,7 @@ const config = function (options = {}) {
 
   // dotenvx-armor related
   const noArmor = resolveNoArmor(options)
+  const noKeychain = resolveNoKeychain(options)
 
   try {
     let envs = buildEnvs(options)
@@ -81,6 +82,7 @@ const config = function (options = {}) {
       processEnv,
       envKeysFile,
       noArmor,
+      noKeychain,
       noSpinner: options.noSpinner,
       token: options.token
     })
@@ -227,6 +229,7 @@ const set = async function (key, value, options = {}) {
   const envKeysFilepath = options.envKeysFile
   const noCreate = options.create === false
   const noArmor = resolveNoArmor(options)
+  const noKeychain = resolveNoKeychain(options)
 
   const {
     keysSrc,
@@ -239,6 +242,7 @@ const set = async function (key, value, options = {}) {
     value,
     fk: envKeysFilepath,
     noArmor,
+    noKeychain,
     noCreate,
     encrypt
   })
@@ -306,6 +310,7 @@ const get = async function (key, options = {}) {
 
   const envs = buildEnvs(options)
   const noArmor = resolveNoArmor(options)
+  const noKeychain = resolveNoKeychain(options)
 
   // ignore
   const ignore = options.ignore || []
@@ -316,7 +321,8 @@ const get = async function (key, options = {}) {
     overload: options.overload,
     all: options.all,
     envKeysFile: options.envKeysFile,
-    noArmor
+    noArmor,
+    noKeychain
   })
 
   for (const error of errors || []) {
@@ -375,6 +381,10 @@ const ls = function (directory, envFile, excludeEnvFile) {
 function resolveNoArmor (options = {}) {
   const sesh = new Session()
   return options.noArmor === true || options.noOps === true || (!options.token && sesh.noArmorSync())
+}
+
+function resolveNoKeychain (options = {}) {
+  return options.noKeychain === true || options.keychain === false
 }
 
 module.exports = {

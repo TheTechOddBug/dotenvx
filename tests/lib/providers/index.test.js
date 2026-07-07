@@ -62,6 +62,41 @@ t.test('providers returns keychain provider when armor is disabled', async ct =>
   ct.end()
 })
 
+t.test('providers returns null when armor and keychain are disabled', async ct => {
+  const session = {
+    noArmor: sinon.stub().rejects(new Error('should not check session')),
+    noArmorSync: sinon.stub().throws(new Error('should not check session'))
+  }
+  const providers = providersWithSession(session)
+
+  ct.equal(await providers({ noArmor: true, noKeychain: true }), null)
+  ct.equal(await providers({ armor: false, keychain: false }), null)
+  ct.equal(providers.sync({ noArmor: true, noKeychain: true }), null)
+  ct.equal(providers.sync({ armor: false, keychain: false }), null)
+  ct.end()
+})
+
+t.test('providers skips keychain but keeps armor when keychain is disabled', async ct => {
+  const armor = sinon.stub().resolves({ 'public-key': 'private-key' })
+  const keychain = keychainStub()
+  const session = {
+    noArmor: sinon.stub().resolves(false),
+    noArmorSync: sinon.stub().returns(false)
+  }
+  const providers = providersWithSession(session, {
+    './armor/index': armor,
+    './keychain/index': keychain
+  })
+
+  const provider = await providers({ noKeychain: true })
+  const value = await provider('public-key')
+
+  ct.same(value, { 'public-key': 'private-key' })
+  ct.equal(keychain.callCount, 0)
+  ct.same(armor.firstCall.args, ['public-key', { onStatus: undefined, token: undefined, command: undefined }])
+  ct.end()
+})
+
 t.test('providers returns keychain provider when armor session is off', async ct => {
   const keychain = keychainStub()
   const session = {

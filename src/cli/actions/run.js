@@ -63,6 +63,7 @@ async function run () {
 
   const sesh = new Session()
   const noArmor = options.armor === false || (!options.token && (await sesh.noArmor()))
+  const noKeychain = options.keychain === false || options.noKeychain === true
 
   if (commandArgs.length < 1) {
     if (spinner) spinner.stop()
@@ -98,6 +99,7 @@ async function run () {
       processEnv: process.env,
       envKeysFile: options.envKeysFile,
       noArmor,
+      noKeychain,
       token: options.token,
       command: commandArgs,
       onStatus: (text) => {
