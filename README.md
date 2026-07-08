@@ -2174,6 +2174,100 @@ $ dotenvx ls -ef '**/.env.prod*'
 ```
 
 </details>
+<details><summary>`gitignore`</summary><br>
+
+Gitignore your `.env` files.
+
+```sh
+$ dotenvx gitignore
+▣ ignored .env* (.gitignore)
+```
+
+</details>
+<details><summary>`gitignore --pattern`</summary><br>
+
+Gitignore specific pattern(s) of `.env` files.
+
+```sh
+$ dotenvx gitignore --pattern .env.keys
+▣ ignored .env.keys (.gitignore)
+```
+
+</details>
+<details><summary>`precommit`</summary><br>
+
+Prevent `.env` files from being committed to code.
+
+```sh
+$ dotenvx precommit
+▣ .env files (1) protected (encrypted or gitignored)
+```
+
+</details>
+<details><summary>`precommit --install`</summary><br>
+
+Install a shell script to `.git/hooks/pre-commit` to prevent accidentally committing any `.env` files to source control.
+
+```sh
+$ dotenvx precommit --install
+▣ dotenvx precommit installed [.git/hooks/pre-commit]
+```
+
+</details>
+<details><summary>`precommit directory`</summary><br>
+
+Prevent `.env` files from being committed to code inside a specified path to a directory.
+
+```sh
+$ echo "HELLO=Dotenvx" > .env
+$ mkdir -p apps/backend
+$ echo "HELLO=Backend" > apps/backend/.env
+
+$ dotenvx precommit apps/backend
+▣ apps/backend/.env not protected (encrypted or gitignored)
+```
+
+</details>
+<details><summary>`prebuild`</summary><br>
+
+Prevent `.env` files from being built into your docker containers.
+
+Add it to your `Dockerfile`.
+
+```Containerfile
+# Install via script
+RUN curl -fsS https://dotenvx.sh | sh
+
+# Or copy binary from official image
+COPY --from=dotenv/dotenvx:latest /usr/local/bin/dotenvx /bin/local/bin
+
+# ... orther container commands
+
+RUN dotenvx prebuild
+CMD ["/usr/local/bin/dotenvx", "run", "--", "node", "index.js"]
+```
+
+</details>
+<details><summary>`prebuild directory`</summary><br>
+
+Prevent `.env` files from being built into your docker containers inside a specified path to a directory.
+
+Add it to your `Dockerfile`.
+
+```Containerfile
+# Install via script
+RUN curl -fsS https://dotenvx.sh | sh
+
+# Or copy binary from official image
+COPY --from=dotenv/dotenvx:latest /usr/local/bin/dotenvx /bin/local/bin
+
+# ... orther container commands
+
+RUN dotenvx prebuild apps/backend
+CMD ["/usr/local/bin/dotenvx", "run", "--", "node", "apps/backend/index.js"]
+```
+
+</details>
 <details><summary>`keychain`</summary><br>
 
 Store private keys in macOS Keychain to keep them out of `.env.keys`.
@@ -2283,100 +2377,6 @@ Move an armored key to another team.
 
 ```sh
 $ dotenvx armor move --team acme
-```
-
-</details>
-<details><summary>`gitignore`</summary><br>
-
-Gitignore your `.env` files.
-
-```sh
-$ dotenvx gitignore
-▣ ignored .env* (.gitignore)
-```
-
-</details>
-<details><summary>`gitignore --pattern`</summary><br>
-
-Gitignore specific pattern(s) of `.env` files.
-
-```sh
-$ dotenvx gitignore --pattern .env.keys
-▣ ignored .env.keys (.gitignore)
-```
-
-</details>
-<details><summary>`precommit`</summary><br>
-
-Prevent `.env` files from being committed to code.
-
-```sh
-$ dotenvx precommit
-▣ .env files (1) protected (encrypted or gitignored)
-```
-
-</details>
-<details><summary>`precommit --install`</summary><br>
-
-Install a shell script to `.git/hooks/pre-commit` to prevent accidentally committing any `.env` files to source control.
-
-```sh
-$ dotenvx precommit --install
-▣ dotenvx precommit installed [.git/hooks/pre-commit]
-```
-
-</details>
-<details><summary>`precommit directory`</summary><br>
-
-Prevent `.env` files from being committed to code inside a specified path to a directory.
-
-```sh
-$ echo "HELLO=Dotenvx" > .env
-$ mkdir -p apps/backend
-$ echo "HELLO=Backend" > apps/backend/.env
-
-$ dotenvx precommit apps/backend
-▣ apps/backend/.env not protected (encrypted or gitignored)
-```
-
-</details>
-<details><summary>`prebuild`</summary><br>
-
-Prevent `.env` files from being built into your docker containers.
-
-Add it to your `Dockerfile`.
-
-```Containerfile
-# Install via script
-RUN curl -fsS https://dotenvx.sh | sh
-
-# Or copy binary from official image
-COPY --from=dotenv/dotenvx:latest /usr/local/bin/dotenvx /bin/local/bin
-
-# ... orther container commands
-
-RUN dotenvx prebuild
-CMD ["/usr/local/bin/dotenvx", "run", "--", "node", "index.js"]
-```
-
-</details>
-<details><summary>`prebuild directory`</summary><br>
-
-Prevent `.env` files from being built into your docker containers inside a specified path to a directory.
-
-Add it to your `Dockerfile`.
-
-```Containerfile
-# Install via script
-RUN curl -fsS https://dotenvx.sh | sh
-
-# Or copy binary from official image
-COPY --from=dotenv/dotenvx:latest /usr/local/bin/dotenvx /bin/local/bin
-
-# ... orther container commands
-
-RUN dotenvx prebuild apps/backend
-CMD ["/usr/local/bin/dotenvx", "run", "--", "node", "apps/backend/index.js"]
 ```
 
 </details>
