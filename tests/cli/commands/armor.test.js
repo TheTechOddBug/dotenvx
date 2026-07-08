@@ -9,6 +9,7 @@ const Session = require('../../../src/db/session')
 
 const armor = configureArmorCommand(new Command('armor'))
 const commandsWithToken = ['up', 'down', 'push', 'pull', 'move']
+const nativeCommands = [...commandsWithToken, 'login', 'logout']
 
 t.test('armor subcommands accept explicit token option', async (ct) => {
   for (const commandName of commandsWithToken) {
@@ -32,11 +33,33 @@ t.test('armor commands are native cli subcommands', async (ct) => {
   ct.match(rootHelp, /\n\s{2}armor\s+⛨ move private keys into Dotenvx Armor \[www\.dotenvx\.com\/armor\]/, 'root help shows curated armor line')
   ct.notMatch(rootHelp, /\n {2}armor {2,}move private keys off-device/, 'hides native armor command from root command list')
 
-  for (const commandName of commandsWithToken) {
+  for (const commandName of nativeCommands) {
     ct.match(armorHelp, new RegExp(`\\n  ${commandName} \\[options\\]`), `has armor ${commandName} subcommand`)
   }
+  ct.same(armor.commands.map(command => command.name()), nativeCommands, 'orders login and logout after armor move')
 
   ct.notMatch(armorHelp, /\n {2}keypair \[options\].*generate armored keypair/, 'does not register armor keypair')
+})
+
+t.test('armor login and logout resolve through native actions', async (ct) => {
+  const loginStub = sinon.stub()
+  const logoutStub = sinon.stub()
+  const configureArmorCommand = proxyquire('../../../src/cli/commands/armor', {
+    './../actions/login': loginStub,
+    './../actions/logout': logoutStub
+  })
+  const armor = configureArmorCommand(new Command('armor'))
+  const login = armor.commands.find(command => command.name() === 'login')
+  const logout = armor.commands.find(command => command.name() === 'logout')
+
+  ct.ok(login.options.some(option => option.long === '--hostname'), 'armor login declares --hostname')
+  ct.ok(logout.options.some(option => option.long === '--hostname'), 'armor logout declares --hostname')
+
+  await login._actionHandler([])
+  await logout._actionHandler([])
+
+  ct.equal(loginStub.callCount, 1, 'login action is called')
+  ct.equal(logoutStub.callCount, 1, 'logout action is called')
 })
 
 t.test('armor default action shows help', async (ct) => {

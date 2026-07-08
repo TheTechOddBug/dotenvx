@@ -2382,7 +2382,7 @@ Move private keys into [Dotenvx Armor ⛨](https://dotenvx.com/armor) for off-de
 Move a private key from `.env.keys` into Dotenvx Armor.
 
 ```sh
-$ dotenvx login
+$ dotenvx armor login
 $ dotenvx armor up
 ```
 
@@ -2435,6 +2435,24 @@ $ dotenvx armor move --team acme
 ```
 
 </details>
+<details><summary>`armor login`</summary><br>
+
+Log in to Dotenvx Armor.
+
+```sh
+$ dotenvx armor login
+```
+
+</details>
+<details><summary>`armor logout`</summary><br>
+
+Log out of Dotenvx Armor.
+
+```sh
+$ dotenvx armor logout
+```
+
+</details>
 <details><summary>`help`</summary><br>
 
 Output help for `dotenvx`.
@@ -2470,9 +2488,8 @@ Commands:
                      prevent including .env files in docker
  
 Professional Security: 
-  login                    log in to move keys off-device, share with your team, and audit access
-  logout                   log out of connected security features
-  armor                    ⛨ move private keys off-device [www.dotenvx.com/armor]
+  keychain                 ⌥ move private keys into macOS Keychain
+  armor                    ⛨ move private keys into Dotenvx Armor [www.dotenvx.com/armor]
 ```
 
 You can get more detailed help per command with `dotenvx help COMMAND`.

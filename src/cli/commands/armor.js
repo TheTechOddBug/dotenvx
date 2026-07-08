@@ -66,6 +66,24 @@ function configureArmorCommand (armor) {
     .option('--token <token>', 'set token')
     .action(moveAction)
 
+  // dotenvx armor login
+  const loginAction = require('./../actions/login')
+  armor
+    .command('login')
+    .description('log in to Dotenvx Armor')
+    .allowUnknownOption()
+    .option('--hostname <hostname>', 'set Armor ⛨ hostname')
+    .action(loginAction)
+
+  // dotenvx armor logout
+  const logoutAction = require('./../actions/logout')
+  armor
+    .command('logout')
+    .description('log out of Dotenvx Armor')
+    .allowUnknownOption()
+    .option('--hostname <hostname>', 'set Armor ⛨ hostname')
+    .action(logoutAction)
+
   return armor
 }
 

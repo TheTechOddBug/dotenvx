@@ -13,12 +13,16 @@ t.test('login and logout remain hidden from default command list', ct => {
   const src = fs.readFileSync(path.join(__dirname, '../../src/cli/dotenvx.js'), 'utf8')
 
   ct.match(src, /program\.command\('login', \{ hidden: true \}\)/)
-  ct.match(src, /program\.addHelpText\('after', '\s{2}login\s+log in to move keys off-device, share with your team, and audit access'\)/)
   ct.match(src, /program\.command\('logout', \{ hidden: true \}\)/)
   ct.match(src, /\.description\('log out of connected security features'\)/)
-  ct.match(src, /program\.addHelpText\('after', '\s{2}logout\s+log out of connected security features'\)/)
   ct.match(src, /program\.command\('armor', \{ hidden: true \}\)/)
   ct.notMatch(src, /program\.addCommand\(require\('\.\/commands\/armor'\), \{ hidden: true \}\)/)
+
+  const help = childProcess.execFileSync(process.execPath, [path.join(__dirname, '../../src/cli/dotenvx.js'), '--help'], { encoding: 'utf8' })
+  const professionalSecurity = help.slice(help.indexOf('Professional Security:'))
+  ct.notMatch(professionalSecurity, /\n\s+login\s+/, 'root help does not advertise login')
+  ct.notMatch(professionalSecurity, /\n\s+logout\s+/, 'root help does not advertise logout')
+  ct.match(professionalSecurity, /\n\s+armor\s+⛨ move private keys into Dotenvx Armor/, 'root help advertises armor')
   ct.end()
 })
 

@@ -231,7 +231,7 @@ program.command('doctor', { hidden: true })
     return require('./actions/doctor').apply(this, args)
   })
 
-// dotenvx login
+// dotenvx login (compatibility alias for dotenvx armor login)
 program.command('login', { hidden: true })
   .description('log in to move keys off-device, share with your team, and audit access')
   .allowUnknownOption()
@@ -240,7 +240,7 @@ program.command('login', { hidden: true })
     return require('./actions/login').apply(this, args)
   })
 
-// dotenvx logout
+// dotenvx logout (compatibility alias for dotenvx armor logout)
 program.command('logout', { hidden: true })
   .description('log out of connected security features')
   .allowUnknownOption()
@@ -268,8 +268,6 @@ program.command('help [command]')
 // dotenvx armor
 program.addHelpText('after', ' ')
 program.addHelpText('after', 'Professional Security: ')
-program.addHelpText('after', '  login                    log in to move keys off-device, share with your team, and audit access')
-program.addHelpText('after', '  logout                   log out of connected security features')
 program.addHelpText('after', '  keychain                 ⌥ move private keys into macOS Keychain')
 program.addHelpText('after', '  armor                    ⛨ move private keys into Dotenvx Armor [www.dotenvx.com/armor]')
 

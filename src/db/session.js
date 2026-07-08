@@ -226,19 +226,19 @@ class Session {
   //
   login (hostname, id, username, accessToken) {
     if (!hostname) {
-      throw new Error('DOTENVX_ARMOR_HOSTNAME not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_HOSTNAME not set. Run [dotenvx armor login]')
     }
 
     if (!id) {
-      throw new Error('DOTENVX_ARMOR_USER not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_USER not set. Run [dotenvx armor login]')
     }
 
     if (!username) {
-      throw new Error('DOTENVX_ARMOR_USERNAME not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_USERNAME not set. Run [dotenvx armor login]')
     }
 
     if (!accessToken) {
-      throw new Error('DOTENVX_ARMOR_TOKEN not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_TOKEN not set. Run [dotenvx armor login]')
     }
 
     const store = this.createStore()
@@ -252,15 +252,15 @@ class Session {
 
   logout (hostname, id, accessToken) {
     if (!hostname) {
-      throw new Error('DOTENVX_ARMOR_HOSTNAME not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_HOSTNAME not set. Run [dotenvx armor login]')
     }
 
     if (!id) {
-      throw new Error('DOTENVX_ARMOR_USER not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_USER not set. Run [dotenvx armor login]')
     }
 
     if (!accessToken) {
-      throw new Error('DOTENVX_ARMOR_TOKEN not set. Run [dotenvx login]')
+      throw new Error('DOTENVX_ARMOR_TOKEN not set. Run [dotenvx armor login]')
     }
 
     const store = this.openStore()
