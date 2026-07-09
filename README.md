@@ -1385,12 +1385,12 @@ $ dotenvx run --token "$DOTENVX_ARMOR_TOKEN" -- yourcommand
 ```
 
 </details>
-<details><summary>`run --no-keychain`</summary><br>
+<details><summary>`run --no-native`</summary><br>
 
-Turn off macOS Keychain lookups.
+Turn off OS secret store lookups.
 
 ```sh
-$ dotenvx run --no-keychain -- yourcommand
+$ dotenvx run --no-native -- yourcommand
 ```
 
 </details>
@@ -1415,12 +1415,12 @@ World
 ```
 
 </details>
-<details><summary>`get KEY --no-keychain`</summary><br>
+<details><summary>`get KEY --no-native`</summary><br>
 
-Turn off macOS Keychain lookups for get.
+Turn off OS secret store lookups for get.
 
 ```sh
-$ dotenvx get HELLO --no-keychain
+$ dotenvx get HELLO --no-native
 ```
 
 </details>
@@ -1739,12 +1739,12 @@ set HELLO_PLAIN (.env)
 Keys ending in `_PLAIN` are not encrypted by `dotenvx set` or `dotenvx encrypt`.
 
 </details>
-<details><summary>`set KEY value --no-keychain`</summary><br>
+<details><summary>`set KEY value --no-native`</summary><br>
 
-Turn off macOS Keychain lookups for set.
+Turn off OS secret store lookups for set.
 
 ```sh
-$ dotenvx set HELLO Dotenvx --no-keychain
+$ dotenvx set HELLO Dotenvx --no-native
 ```
 
 </details>
@@ -1779,12 +1779,12 @@ $ dotenvx encrypt -f .env.production
 ```
 
 </details>
-<details><summary>`encrypt --no-keychain`</summary><br>
+<details><summary>`encrypt --no-native`</summary><br>
 
-Turn off macOS Keychain lookups for encrypt.
+Turn off OS secret store lookups for encrypt.
 
 ```sh
-$ dotenvx encrypt --no-keychain
+$ dotenvx encrypt --no-native
 ◈ encrypted (.env)
 ```
 
@@ -1918,12 +1918,12 @@ $ dotenvx decrypt
 ```
 
 </details>
-<details><summary>`decrypt --no-keychain`</summary><br>
+<details><summary>`decrypt --no-native`</summary><br>
 
-Turn off macOS Keychain lookups for decrypt.
+Turn off OS secret store lookups for decrypt.
 
 ```sh
-$ dotenvx decrypt --no-keychain
+$ dotenvx decrypt --no-native
 ◇ decrypted (.env)
 ```
 
@@ -2039,12 +2039,12 @@ $ dotenvx keypair
 ```
 
 </details>
-<details><summary>`keypair --no-keychain`</summary><br>
+<details><summary>`keypair --no-native`</summary><br>
 
-Turn off macOS Keychain lookups for keypair.
+Turn off OS secret store lookups for keypair.
 
 ```sh
-$ dotenvx keypair --no-keychain
+$ dotenvx keypair --no-native
 {"DOTENV_PUBLIC_KEY":"<publicKey>","DOTENV_PRIVATE_KEY":"<privateKey>"}
 ```
 
@@ -2352,52 +2352,52 @@ $ dotenvx lock down
 ```
 
 </details>
-<details><summary>`keychain`</summary><br>
+<details><summary>`native`</summary><br>
 
-Store private keys in macOS Keychain to keep them out of `.env.keys`.
+Move private keys into your OS secret store (macOS Keychain supported).
 
 Currently supported on macOS.
 
 </details>
-<details><summary>`keychain up`</summary><br>
+<details><summary>`native up`</summary><br>
 
-Move a private key from `.env.keys` into local macOS Keychain.
+Move a private key from `.env.keys` into your OS secret store.
 
 ```sh
-$ dotenvx keychain up
+$ dotenvx native up
 ```
 
 Specify files with `-f` and `-fk`.
 
 ```sh
-$ dotenvx keychain up -f .env.production -fk .env.keys
+$ dotenvx native up -f .env.production -fk .env.keys
 ```
 
 </details>
-<details><summary>`keychain down`</summary><br>
+<details><summary>`native down`</summary><br>
 
-Move a private key from macOS Keychain back into `.env.keys`.
+Move a private key from your OS secret store back into `.env.keys`.
 
 ```sh
-$ dotenvx keychain down
+$ dotenvx native down
 ```
 
 </details>
-<details><summary>`keychain push`</summary><br>
+<details><summary>`native push`</summary><br>
 
-Copy a private key from `.env.keys` into local macOS Keychain.
+Copy a private key from `.env.keys` into your OS secret store.
 
 ```sh
-$ dotenvx keychain push
+$ dotenvx native push
 ```
 
 </details>
-<details><summary>`keychain pull`</summary><br>
+<details><summary>`native pull`</summary><br>
 
-Copy a private key from macOS Keychain into `.env.keys`.
+Copy a private key from your OS secret store into `.env.keys`.
 
 ```sh
-$ dotenvx keychain pull
+$ dotenvx native pull
 ```
 
 </details>
@@ -2518,7 +2518,7 @@ Commands:
  
 Professional Security: 
   lock                     ⊡ lock private keys with a local passphrase
-  keychain                 ⌥ move private keys into local macOS Keychain
+  native                   ⌥ move private keys into your OS secret store (macOS Keychain supported)
   armor                    ⛨ move private keys into Dotenvx Armor [www.dotenvx.com/armor]
 ```
 

@@ -5,7 +5,7 @@ const armoredKeyDisplay = require('../../../lib/helpers/armoredKeyDisplay')
 
 async function up () {
   const options = this.opts()
-  const spinner = await createSpinner({ ...options, text: 'keychaining' })
+  const spinner = await createSpinner({ ...options, text: 'storing' })
 
   logger.debug(`options: ${JSON.stringify(options)}`)
 
@@ -15,7 +15,7 @@ async function up () {
 
     if (spinner) spinner.stop()
     if (changed) {
-      logger.success(`⌥ keychained (${keyDisplay})`)
+      logger.success(`⌥ stored (${keyDisplay})`)
     } else {
       logger.info(`○ no change (${keyDisplay})`)
     }

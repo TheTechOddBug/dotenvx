@@ -29,7 +29,7 @@ class KeychainPull {
     try {
       privateKey = execFileSync(SECURITY_BIN, ['find-generic-password', '-s', SERVICE, '-a', publicKey, '-w'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
     } catch {
-      throw new Error(`[NOT_FOUND] private key not found in macOS Keychain (${armoredKeyDisplay(publicKey)}). fix: [dotenvx keychain up]`)
+      throw new Error(`[NOT_FOUND] private key not found in macOS Keychain (${armoredKeyDisplay(publicKey)}). fix: [dotenvx native up]`)
     }
 
     const result = upsertEnvKey(privateKeyName, privateKey, envKeysFile)

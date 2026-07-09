@@ -33,7 +33,7 @@ async function get (key) {
   try {
     const sesh = new Session()
     const noArmor = options.armor === false || (await sesh.noArmor())
-    const noKeychain = options.keychain === false || options.noKeychain === true
+    const noKeychain = options.native === false || options.noNative === true
     const { parsed, errors } = await getResolver({
       key,
       envs,

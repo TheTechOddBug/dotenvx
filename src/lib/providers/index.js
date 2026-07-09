@@ -46,7 +46,7 @@ function armorProviderForOptions (options) {
 function useKeychain (options) {
   if (process.platform !== 'darwin') return false
   if (process.env.CI) return false
-  return options.noKeychain !== true && options.keychain !== false
+  return options.noNative !== true && options.native !== false && options.noKeychain !== true
 }
 
 function useArmor (options, noArmor) {

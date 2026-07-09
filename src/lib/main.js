@@ -384,7 +384,7 @@ function resolveNoArmor (options = {}) {
 }
 
 function resolveNoKeychain (options = {}) {
-  return options.noKeychain === true || options.keychain === false
+  return options.noNative === true || options.native === false
 }
 
 module.exports = {

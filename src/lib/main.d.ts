@@ -180,12 +180,12 @@ export interface DotenvConfigOptions {
   noArmor?: boolean;
 
   /**
-   * Turn off macOS Keychain features.
+   * Turn off OS secret store features.
    *
    * @default false
-   * @example require('@dotenvx/dotenvx').config({ noKeychain: true })
+   * @example require('@dotenvx/dotenvx').config({ noNative: true })
    */
-  noKeychain?: boolean;
+  noNative?: boolean;
 
   /**
    * Turn off Dotenvx Armor features. Alias for `noArmor`.
@@ -271,12 +271,12 @@ export interface SetOptions {
   noArmor?: boolean;
 
   /**
-   * Turn off macOS Keychain features.
+   * Turn off OS secret store features.
    *
    * @default false
-   * @example require('@dotenvx/dotenvx').set(key, value, { noKeychain: true })
+   * @example require('@dotenvx/dotenvx').set(key, value, { noNative: true })
    */
-  noKeychain?: boolean;
+  noNative?: boolean;
 
   /**
    * Turn off Dotenvx Armor features. Alias for `noArmor`.
@@ -364,12 +364,12 @@ export interface GetOptions {
   noArmor?: boolean;
 
   /**
-   * Turn off macOS Keychain features.
+   * Turn off OS secret store features.
    *
    * @default false
-   * @example require('@dotenvx/dotenvx').get('KEY', { noKeychain: true })
+   * @example require('@dotenvx/dotenvx').get('KEY', { noNative: true })
    */
-  noKeychain?: boolean;
+  noNative?: boolean;
 
   /**
    * Turn off Dotenvx Armor features. Alias for `noArmor`.

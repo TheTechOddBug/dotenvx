@@ -17,7 +17,7 @@ async function decrypt () {
   const envs = this.envs
   const sesh = new Session()
   const noArmor = options.armor === false || (await sesh.noArmor())
-  const noKeychain = options.keychain === false || options.noKeychain === true
+  const noKeychain = options.native === false || options.noNative === true
 
   let errorCount = 0
 

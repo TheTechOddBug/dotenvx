@@ -1,43 +1,43 @@
-function configureKeychainCommand (keychain) {
-  keychain
-    .description('move private keys into local macOS Keychain')
+function configureNativeCommand (native) {
+  native
+    .description('move private keys into your OS secret store (macOS Keychain supported)')
     .action(function () {
       this.help()
     })
 
   const upAction = require('./../actions/keychain/up')
-  keychain
+  native
     .command('up')
-    .description('store key in macOS Keychain')
+    .description('store key in OS secret store')
     .option('-f, --env-file <path>', 'path to your env file')
     .option('-fk, --env-keys-file <path>', 'path to your .env.keys file', '.env.keys')
     .action(upAction)
 
   const downAction = require('./../actions/keychain/down')
-  keychain
+  native
     .command('down')
-    .description('move key from macOS Keychain to .env.keys')
+    .description('move key from OS secret store to .env.keys')
     .option('-f, --env-file <path>', 'path to your env file')
     .option('-fk, --env-keys-file <path>', 'path to your .env.keys file', '.env.keys')
     .action(downAction)
 
   const pushAction = require('./../actions/keychain/push')
-  keychain
+  native
     .command('push')
-    .description('push key to macOS Keychain from .env.keys')
+    .description('push key to OS secret store from .env.keys')
     .option('-f, --env-file <path>', 'path to your env file')
     .option('-fk, --env-keys-file <path>', 'path to your .env.keys file', '.env.keys')
     .action(pushAction)
 
   const pullAction = require('./../actions/keychain/pull')
-  keychain
+  native
     .command('pull')
-    .description('pull key from macOS Keychain into .env.keys')
+    .description('pull key from OS secret store into .env.keys')
     .option('-f, --env-file <path>', 'path to your env file')
     .option('-fk, --env-keys-file <path>', 'path to your .env.keys file', '.env.keys')
     .action(pullAction)
 
-  return keychain
+  return native
 }
 
-module.exports = configureKeychainCommand
+module.exports = configureNativeCommand
