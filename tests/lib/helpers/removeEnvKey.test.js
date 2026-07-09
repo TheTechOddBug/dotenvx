@@ -6,7 +6,7 @@ const path = require('path')
 const removeEnvKey = require('../../../src/lib/helpers/removeEnvKey')
 
 t.test('#removeEnvKey removes key from existing .env.keys file', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -28,7 +28,7 @@ t.test('#removeEnvKey removes key from existing .env.keys file', ct => {
 })
 
 t.test('#removeEnvKey removes duplicate and export-prefixed entries', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -49,7 +49,7 @@ t.test('#removeEnvKey removes duplicate and export-prefixed entries', ct => {
 })
 
 t.test('#removeEnvKey preserves CRLF line endings', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -70,7 +70,7 @@ t.test('#removeEnvKey preserves CRLF line endings', ct => {
 })
 
 t.test('#removeEnvKey does not rewrite file when key is already absent', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -94,7 +94,7 @@ t.test('#removeEnvKey does not rewrite file when key is already absent', ct => {
 })
 
 t.test('#removeEnvKey leaves an empty .env.keys file unchanged', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -115,7 +115,7 @@ t.test('#removeEnvKey leaves an empty .env.keys file unchanged', ct => {
 })
 
 t.test('#removeEnvKey deletes file when removing the last key', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -136,7 +136,7 @@ t.test('#removeEnvKey deletes file when removing the last key', ct => {
 })
 
 t.test('#removeEnvKey deletes file when only comments remain after removing last key', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {
@@ -157,7 +157,7 @@ t.test('#removeEnvKey deletes file when only comments remain after removing last
 })
 
 t.test('#removeEnvKey returns unchanged when .env.keys is missing', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-remove-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-remove-'))
   const oldCwd = process.cwd()
 
   try {

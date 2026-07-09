@@ -217,23 +217,6 @@ t.test('keypair KEY (not found)', async ct => {
   ct.end()
 })
 
-t.test('keypair --no-ops passes armor false to keypair resolver', async ct => {
-  const optsStub = sinon.stub().returns({ ops: false })
-  const fakeContext = { opts: optsStub }
-  const { keypair, keypairResolver } = loadKeypairAction({
-    result: { DOTENV_PUBLIC_KEY: '<publicKey>', DOTENV_PRIVATE_KEY: '<privateKey>' }
-  })
-
-  await captureStdout(async () => {
-    await keypair.call(fakeContext, undefined)
-  })
-
-  t.ok(keypairResolver.calledOnce, 'keypair resolver called')
-  t.equal(keypairResolver.firstCall.args[0].armor, false, 'armor false')
-
-  ct.end()
-})
-
 t.test('keypair updates spinner text while waiting for approval', async ct => {
   const fakeSpinner = {
     text: 'retrieving',

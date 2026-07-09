@@ -6,11 +6,10 @@ const catchAndLog = require('./../../lib/helpers/catchAndLog')
 const createSpinner = require('../../lib/helpers/createSpinner')
 const Session = require('../../db/session')
 const getResolver = require('./../../lib/resolvers/get')
-const normalizeArmorAliases = require('./normalizeArmorAliases')
 const normalizeDotenvConfigConvention = require('../../lib/helpers/normalizeDotenvConfigConvention')
 
 async function get (key) {
-  const options = normalizeDotenvConfigConvention(normalizeArmorAliases(this.opts()))
+  const options = normalizeDotenvConfigConvention(this.opts())
   const spinner = await createSpinner({ ...options, text: 'decrypting' })
 
   logger.debug(`options: ${JSON.stringify(options)}`)

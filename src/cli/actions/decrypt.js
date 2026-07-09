@@ -4,12 +4,11 @@ const { logger } = require('./../../shared/logger')
 const catchAndLog = require('../../lib/helpers/catchAndLog')
 const createSpinner = require('../../lib/helpers/createSpinner')
 const Session = require('../../db/session')
-const normalizeArmorAliases = require('./normalizeArmorAliases')
 
 const decryptTransform = require('./../../lib/transforms/decrypt')
 
 async function decrypt () {
-  const options = normalizeArmorAliases(this.opts())
+  const options = this.opts()
   const spinner = await createSpinner({ ...options, text: 'decrypting' })
 
   logger.debug(`options: ${JSON.stringify(options)}`)

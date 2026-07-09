@@ -380,7 +380,7 @@ const ls = function (directory, envFile, excludeEnvFile) {
 
 function resolveNoArmor (options = {}) {
   const sesh = new Session()
-  return options.noArmor === true || options.noOps === true || (!options.token && sesh.noArmorSync())
+  return options.noArmor === true || (!options.token && sesh.noArmorSync())
 }
 
 function resolveNoKeychain (options = {}) {
@@ -395,7 +395,7 @@ module.exports = {
   set,
   get,
   ls,
-  // expose for libs depending on @dotenvx/dotenvx - like dotenvx-ops
+  // expose for libs depending on @dotenvx/dotenvx
   setLogLevel,
   logger,
   getColor,

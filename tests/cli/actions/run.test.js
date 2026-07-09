@@ -148,29 +148,8 @@ t.test('run --convention', async ct => {
   ct.end()
 })
 
-t.test('run --no-ops normalizes armor off', async ct => {
-  const options = { armor: true, ops: false, vlt: true }
-  const optsStub = sinon.stub().returns(options)
-  const fakeContext = { opts: optsStub, args: ['echo', ''], envs: [] }
-  sinon.stub(process, 'argv').value(['node', 'dotenvx', 'run', '--no-ops', '--', 'echo', ''])
-  const stub = envsResolverStub
-  stub.returns({
-    processedEnvs: [],
-    readableFilepaths: []
-  })
-
-  await run.call(fakeContext)
-
-  t.ok(stub.called, 'envsResolver() called')
-  t.equal(stub.firstCall.args[0].noArmor, true, 'envs resolver was called with noArmor true')
-  t.equal(options.armor, false, 'armor false')
-  t.equal(options.ops, false, 'ops stays as parsed')
-
-  ct.end()
-})
-
 t.test('run --no-armor uses armor off', async ct => {
-  const options = { armor: false, ops: true, vlt: true }
+  const options = { armor: false }
   const optsStub = sinon.stub().returns(options)
   const fakeContext = { opts: optsStub, args: ['echo', ''], envs: [] }
   sinon.stub(process, 'argv').value(['node', 'dotenvx', 'run', '--no-armor', '--', 'echo', ''])
@@ -185,7 +164,6 @@ t.test('run --no-armor uses armor off', async ct => {
   t.ok(stub.called, 'envsResolver() called')
   t.equal(stub.firstCall.args[0].noArmor, true, 'envs resolver was called with noArmor true')
   t.equal(options.armor, false, 'armor false')
-  t.equal(options.ops, true, 'ops stays as parsed')
 
   ct.end()
 })

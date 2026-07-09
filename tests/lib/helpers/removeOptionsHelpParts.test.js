@@ -21,7 +21,7 @@ t.test('#removeOptionsHelpParts aligns command descriptions after [options] remo
     'Commands:',
     '  run [options]              inject env at runtime',
     '  get [KEY] [options]        return a single environment variable',
-    '  login [options]            login via dotenvx-ops',
+    '  login [options]            login via dotenvx-armor',
     '',
     'Advanced:'
   ]
@@ -32,7 +32,7 @@ t.test('#removeOptionsHelpParts aligns command descriptions after [options] remo
     'Commands:',
     '  run        inject env at runtime',
     '  get [KEY]  return a single environment variable',
-    '  login      login via dotenvx-ops',
+    '  login      login via dotenvx-armor',
     '',
     'Advanced:'
   ])

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /* c8 ignore start */
-const { Command, Option } = require('commander')
+const { Command } = require('commander')
 const program = new Command()
 
 const { setLogLevel, logger } = require('../shared/logger')
@@ -74,7 +74,6 @@ program.command('run')
   .option('--token <token>', 'set Armor ⛨ token')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
-  .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
     return require('./actions/run').apply(this, args)
@@ -98,7 +97,6 @@ program.command('get')
   .option('--format <type>', 'format of the output (json, shell, colon, eval)', 'json')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
-  .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
     return require('./actions/get').apply(this, args)
@@ -119,7 +117,6 @@ program.command('set')
   .option('--no-create', 'do not create .env file(s) when missing')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
-  .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
     return require('./actions/set').apply(this, args)
@@ -137,7 +134,6 @@ program.command('encrypt')
   .option('--no-create', 'do not create .env file(s) when missing')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
-  .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .action(function (...args) {
     this.envs = envs
     return require('./actions/encrypt').apply(this, args)
@@ -152,7 +148,6 @@ program.command('decrypt')
   .option('-ek, --exclude-key <excludeKeys...>', 'keys(s) to exclude from decryption (default: none)')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
-  .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .option('--stdout', 'send to stdout')
   .action(function (...args) {
     this.envs = envs
@@ -168,7 +163,6 @@ program.command('keypair')
   .option('-fk, --env-keys-file <path>', 'path to your .env.keys file (default: same path as your env file)')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
-  .addOption(new Option('--no-ops', 'disable dotenvx-ops features (deprecated. use --no-armor)').hideHelp())
   .option('-pp, --pretty-print', 'pretty print output')
   .option('--pp', 'pretty print output (alias)')
   .option('--format <type>', 'format of the output (json, shell, colon)', 'json')

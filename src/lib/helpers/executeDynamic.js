@@ -42,20 +42,6 @@ function armorBanner () {
 }
 
 function dynamicAttempts (command, forwardedArgs) {
-  if (command === 'vlt') {
-    return [
-      ['dotenvx-armor', forwardedArgs],
-      ['dotenvx-ops', forwardedArgs]
-    ]
-  }
-
-  if (command === 'ops') {
-    return [
-      ['dotenvx-armor', forwardedArgs],
-      ['dotenvx-ops', forwardedArgs]
-    ]
-  }
-
   return [[`dotenvx-${command}`, forwardedArgs]]
 }
 
@@ -85,11 +71,7 @@ function executeDynamic (program, command, rawArgs) {
   }
 
   if (result.error) {
-    if (command === 'vlt') {
-      console.log(armorBanner())
-    } else if (command === 'ops') {
-      console.log(armorBanner())
-    } else if (command === 'armor') {
+    if (command === 'armor') {
       console.log(armorBanner())
     } else {
       logger.info(`error: unknown command '${command}'`)

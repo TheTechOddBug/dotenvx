@@ -3,10 +3,9 @@ const { logger } = require('./../../shared/logger')
 const keypairResolver = require('./../../lib/resolvers/keypair')
 const catchAndLog = require('./../../lib/helpers/catchAndLog')
 const createSpinner = require('../../lib/helpers/createSpinner')
-const normalizeArmorAliases = require('./normalizeArmorAliases')
 
 async function keypair (key) {
-  const options = normalizeArmorAliases(this.opts())
+  const options = this.opts()
   const spinner = await createSpinner({ ...options, text: 'retrieving' })
 
   logger.debug(`options: ${JSON.stringify(options)}`)

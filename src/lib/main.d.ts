@@ -187,14 +187,6 @@ export interface DotenvConfigOptions {
    */
   noNative?: boolean;
 
-  /**
-   * Turn off Dotenvx Armor features. Alias for `noArmor`.
-   *
-   * @default false
-   * @example require('@dotenvx/dotenvx').config({ noOps: true })
-   */
-  noOps?: boolean;
-
 }
 
 export type DotenvConfigEnv =
@@ -277,14 +269,6 @@ export interface SetOptions {
    * @example require('@dotenvx/dotenvx').set(key, value, { noNative: true })
    */
   noNative?: boolean;
-
-  /**
-   * Turn off Dotenvx Armor features. Alias for `noArmor`.
-   *
-   * @default false
-   * @example require('@dotenvx/dotenvx').set(key, value, { noOps: true })
-   */
-  noOps?: boolean;
 
 }
 
@@ -370,14 +354,6 @@ export interface GetOptions {
    * @example require('@dotenvx/dotenvx').get('KEY', { noNative: true })
    */
   noNative?: boolean;
-
-  /**
-   * Turn off Dotenvx Armor features. Alias for `noArmor`.
-   *
-   * @default false
-   * @example require('@dotenvx/dotenvx').get('KEY', { noOps: true })
-   */
-  noOps?: boolean;
 
 }
 

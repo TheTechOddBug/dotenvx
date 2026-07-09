@@ -8,10 +8,9 @@ const createSpinner = require('../../lib/helpers/createSpinner')
 const Errors = require('../../lib/helpers/errors')
 const prompts = require('../../lib/helpers/prompts')
 const Session = require('../../db/session')
-const normalizeArmorAliases = require('./normalizeArmorAliases')
 
 async function set (key, value) {
-  const options = normalizeArmorAliases(this.opts())
+  const options = this.opts()
 
   let encrypt = true
   let settingMessage = 'encrypting'

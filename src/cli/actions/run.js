@@ -6,7 +6,6 @@ const envsResolver = require('./../../lib/resolvers/envs')
 const catchAndLog = require('./../../lib/helpers/catchAndLog')
 const createSpinner = require('../../lib/helpers/createSpinner')
 const Session = require('../../db/session')
-const normalizeArmorAliases = require('./normalizeArmorAliases')
 const normalizeDotenvConfigQuiet = require('../../lib/helpers/normalizeDotenvConfigQuiet')
 const normalizeDotenvConfigConvention = require('../../lib/helpers/normalizeDotenvConfigConvention')
 
@@ -47,7 +46,7 @@ function uniqueInjectedKeys (processedEnvs) {
 }
 
 async function run () {
-  const options = normalizeDotenvConfigConvention(normalizeDotenvConfigQuiet(normalizeArmorAliases(this.opts())))
+  const options = normalizeDotenvConfigConvention(normalizeDotenvConfigQuiet(this.opts()))
 
   let commandArgs = this.args
   if (commandArgs.length < 1) {

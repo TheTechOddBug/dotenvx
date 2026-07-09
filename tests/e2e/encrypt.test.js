@@ -16,7 +16,7 @@ const dotenvx = `${node} ${path.join(originalDir, 'src/cli/dotenvx.js')}`
 function stripArmorStatus (output) {
   return output
     .split('\n')
-    .filter(line => !line.match(/^\[dotenvx@.+\] ⛨ (armor|ops|vlt): (on|off)$/))
+    .filter(line => !line.match(/^\[dotenvx@.+\] ⛨ (armor): (on|off)$/))
     .join('\n')
 }
 

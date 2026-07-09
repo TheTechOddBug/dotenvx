@@ -34,8 +34,6 @@ t.test('#--help shows armor advanced command', ct => {
   ct.notMatch(output, /\n\s+logout\s+log out of connected security features/, 'root help does not show logout')
   ct.match(output, /armor\s+⛨ move private keys into Dotenvx Armor \[www\.dotenvx\.com\/armor\]/, 'armor advanced command is shown')
   ct.notMatch(output, /ext\s+⊕ extensions/, 'ext command is not shown')
-  ct.notMatch(output, /vlt\s+⛨ ARMORED KEYS/, 'vlt advanced command is not shown')
-  ct.notMatch(output, /ops\s+⛨ ARMORED KEYS/, 'ops advanced command is not shown')
 
   ct.end()
 })
@@ -49,13 +47,12 @@ t.test('#armor --help shows login and logout commands', ct => {
   ct.end()
 })
 
-t.test('#run --help shows no-armor and hides legacy no-ops flag', ct => {
+t.test('#run --help shows armor and native flags', ct => {
   const output = execShell(`${dotenvx} run --help`)
 
   ct.match(output, /--no-armor\b/, 'no-armor is shown')
   ct.match(output, /--no-native\b/, 'no-native is shown')
   ct.notMatch(output, /--no-keychain\b/, 'no-keychain is removed')
-  ct.notMatch(output, /--no-ops\b/, 'no-ops is hidden')
 
   ct.end()
 })

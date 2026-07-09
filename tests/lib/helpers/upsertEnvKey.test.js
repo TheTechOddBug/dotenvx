@@ -6,7 +6,7 @@ const path = require('path')
 const upsertEnvKey = require('../../../src/lib/helpers/upsertEnvKey')
 
 t.test('#upsertEnvKey creates .env.keys when missing', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-upsert-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-upsert-'))
   const oldCwd = process.cwd()
 
   try {
@@ -27,7 +27,7 @@ t.test('#upsertEnvKey creates .env.keys when missing', ct => {
 })
 
 t.test('#upsertEnvKey appends key when missing from existing file', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-upsert-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-upsert-'))
   const oldCwd = process.cwd()
 
   try {
@@ -49,7 +49,7 @@ t.test('#upsertEnvKey appends key when missing from existing file', ct => {
 })
 
 t.test('#upsertEnvKey does not rewrite file when value is already current', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-upsert-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-upsert-'))
   const oldCwd = process.cwd()
 
   try {
@@ -74,7 +74,7 @@ t.test('#upsertEnvKey does not rewrite file when value is already current', ct =
 })
 
 t.test('#upsertEnvKey replaces existing values, removes duplicates, and avoids quotes', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-upsert-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-upsert-'))
   const oldCwd = process.cwd()
 
   try {
@@ -104,7 +104,7 @@ t.test('#upsertEnvKey replaces existing values, removes duplicates, and avoids q
 })
 
 t.test('#upsertEnvKey preserves CRLF line endings', ct => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-ops-upsert-'))
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-upsert-'))
   const oldCwd = process.cwd()
 
   try {
