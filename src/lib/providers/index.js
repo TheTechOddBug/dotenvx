@@ -4,7 +4,7 @@ const armorProvider = require('./armor/index')
 const keychainProvider = require('./keychain/index')
 
 function syncArmorProvider (publicKeyHex) {
-  const { createSyncFn } = require('synckit')
+  const { createSyncFn } = require('@dotenvx/tooling')
   const runProviderSync = createSyncFn(require.resolve('./worker.js'))
   return runProviderSync(require.resolve('./armor/index'), publicKeyHex)
 }

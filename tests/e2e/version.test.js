@@ -1,6 +1,6 @@
 const t = require('tap')
 const path = require('path')
-const which = require('which')
+const { which } = require('@dotenvx/tooling')
 const { execSync } = require('child_process')
 
 const packageJson = require('../../src/lib/helpers/packageJson')

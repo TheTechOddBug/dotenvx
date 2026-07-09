@@ -2,7 +2,7 @@ const t = require('tap')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
-const which = require('which')
+const { which } = require('@dotenvx/tooling')
 const { dotenv } = require('@dotenvx/tooling')
 const { execSync } = require('child_process')
 

@@ -1,4 +1,4 @@
-const execa = require('execa')
+const { execa } = require('@dotenvx/tooling')
 /* c8 ignore start */
 const pkgArgs = process.pkg ? { PKG_EXECPATH: '' } : {}
 /* c8 ignore stop */

@@ -1,6 +1,7 @@
 const t = require('tap')
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
+const tooling = require('@dotenvx/tooling')
 
 t.test('select uses enquirer with normalized choices and IO context', async ct => {
   const prompt = sinon.stub().resolves({ value: 'file' })
@@ -10,7 +11,7 @@ t.test('select uses enquirer with normalized choices and IO context', async ct =
   }
 
   const prompts = proxyquire('../../../src/lib/helpers/prompts', {
-    enquirer: EnquirerMock
+    '@dotenvx/tooling': { ...tooling, Enquirer: EnquirerMock }
   })
 
   const input = {}
@@ -49,7 +50,7 @@ t.test('select does not require IO context', async ct => {
   }
 
   const prompts = proxyquire('../../../src/lib/helpers/prompts', {
-    enquirer: EnquirerMock
+    '@dotenvx/tooling': { ...tooling, Enquirer: EnquirerMock }
   })
 
   const value = await prompts.select({

@@ -1,4 +1,4 @@
-const Conf = require('conf')
+const { Conf } = require('@dotenvx/tooling')
 const { derive, keypair } = require('@dotenvx/primitives')
 
 const encryptDeviceValue = require('./../lib/helpers/encryptDeviceValue')

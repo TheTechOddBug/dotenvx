@@ -1,4 +1,4 @@
-const Enquirer = require('enquirer')
+const { Enquirer } = require('@dotenvx/tooling')
 
 const enquirer = new Enquirer()
 

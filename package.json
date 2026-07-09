@@ -44,20 +44,7 @@
   "funding": "https://dotenvx.com",
   "dependencies": {
     "@dotenvx/primitives": "^1.8.0",
-    "@dotenvx/tooling": "^0.2.0",
-    "conf": "^10.2.0",
-    "enquirer": "^2.4.1",
-    "env-paths": "^2.2.1",
-    "execa": "^5.1.1",
-    "fdir": "^6.2.0",
-    "ignore": "^7.0.5",
-    "object-treeify": "1.1.33",
-    "open": "^8.4.2",
-    "synckit": "0.11.13",
-    "systeminformation": "^5.31.11",
-    "undici": "^7.11.0",
-    "which": "^6.0.1",
-    "yocto-spinner": "^1.2.0"
+    "@dotenvx/tooling": "^1.0.0"
   },
   "devDependencies": {
     "@yao-pkg/pkg": "^6.12.0",

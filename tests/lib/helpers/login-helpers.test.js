@@ -2,6 +2,7 @@ const t = require('tap')
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const { EventEmitter } = require('events')
+const tooling = require('@dotenvx/tooling')
 
 t.beforeEach(() => {
   sinon.restore()
@@ -39,7 +40,7 @@ t.test('formatCode groups user code in fours', ct => {
 t.test('http delegates to undici request', async ct => {
   const request = sinon.stub().resolves({ ok: true })
   const { http } = proxyquire('../../../src/lib/helpers/http', {
-    undici: { request }
+    '@dotenvx/tooling': { ...tooling, request }
   })
 
   const out = await http('https://armor.dotenvx.com/oauth/token', { method: 'POST' })
@@ -51,7 +52,7 @@ t.test('http delegates to undici request', async ct => {
 t.test('openUrl opens without waiting', async ct => {
   const open = sinon.stub().resolves()
   const openUrl = proxyquire('../../../src/lib/helpers/openUrl', {
-    open
+    '@dotenvx/tooling': { ...tooling, open }
   })
 
   await openUrl('https://armor.dotenvx.com/device')

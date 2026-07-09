@@ -1,4 +1,4 @@
-const treeify = require('object-treeify')
+const { objectTreeify: treeify } = require('@dotenvx/tooling')
 
 const { logger } = require('./../../shared/logger')
 

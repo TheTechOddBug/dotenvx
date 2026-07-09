@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const execa = require('execa')
+const { execa } = require('@dotenvx/tooling')
 const { scan } = require('@dotenvx/primitives')
 const canonicalEnvFilename = require('./canonicalEnvFilename')
 const environment = require('../conventions/environment')

@@ -1,4 +1,4 @@
-const { fdir: Fdir } = require('fdir')
+const { Fdir } = require('@dotenvx/tooling')
 const path = require('path')
 const { match } = require('@dotenvx/primitives')
 

@@ -1,4 +1,4 @@
-const { runAsWorker } = require('synckit')
+const { runAsWorker } = require('@dotenvx/tooling')
 
 runAsWorker(async (providerPath, publicKeyHex) => {
   const provider = require(providerPath)

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 const fsx = require('./../helpers/fsx')
 const path = require('path')
-const ignore = require('ignore')
+const { ignore } = require('@dotenvx/tooling')
 
 const ls = require('../resolvers/ls')
 const Errors = require('../helpers/errors')

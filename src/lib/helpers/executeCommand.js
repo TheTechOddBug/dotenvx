@@ -1,5 +1,5 @@
 const path = require('path')
-const which = require('which')
+const { which } = require('@dotenvx/tooling')
 const execute = require('./../../lib/helpers/execute')
 const { logger } = require('./../../shared/logger')
 const Errors = require('./errors')
