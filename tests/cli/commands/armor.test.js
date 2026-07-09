@@ -1,7 +1,7 @@
 const t = require('tap')
 const { execFileSync } = require('child_process')
 const sinon = require('sinon')
-const { Command } = require('commander')
+const { Command } = require('@dotenvx/tooling')
 const proxyquire = require('proxyquire')
 
 const configureArmorCommand = require('../../../src/cli/commands/armor')

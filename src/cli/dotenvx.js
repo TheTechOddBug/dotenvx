@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 
 /* c8 ignore start */
-const { Command } = require('commander')
+const { Command } = require('@dotenvx/tooling')
 const program = new Command()
 
-const { setLogLevel, logger } = require('../shared/logger')
+const { setLogLevel } = require('../shared/logger')
 const examples = require('./examples')
 const packageJson = require('./../lib/helpers/packageJson')
-const Errors = require('./../lib/helpers/errors')
-const getCommanderVersion = require('./../lib/helpers/getCommanderVersion')
 const executeDynamic = require('./../lib/helpers/executeDynamic')
 const removeDynamicHelpSection = require('./../lib/helpers/removeDynamicHelpSection')
 const removeOptionsHelpParts = require('./../lib/helpers/removeOptionsHelpParts')
@@ -21,14 +19,6 @@ function collectEnvs (type) {
     envs.push({ type, value })
     return previous.concat([value])
   }
-}
-
-// surface hoisting problems
-const commanderVersion = getCommanderVersion()
-if (commanderVersion && parseInt(commanderVersion.split('.')[0], 10) >= 12) {
-  const message = `dotenvx depends on commander@11.x.x but you are attempting to hoist commander@${commanderVersion}`
-  const error = new Errors({ message }).dangerousDependencyHoist()
-  logger.error(error.messageWithHelp)
 }
 
 // global log levels

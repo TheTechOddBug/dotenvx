@@ -3,7 +3,7 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 const which = require('which')
-const dotenv = require('dotenv')
+const { dotenv } = require('@dotenvx/tooling')
 const { spawnSync } = require('child_process')
 
 let tempDir = ''

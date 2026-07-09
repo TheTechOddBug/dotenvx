@@ -55,8 +55,7 @@ t.test('login resolves through native action', (ct) => {
 
   proxyquire('../../src/cli/dotenvx', {
     './../lib/helpers/executeDynamic': executeDynamicStub,
-    './actions/login': loginStub,
-    './../lib/helpers/getCommanderVersion': () => '11.1.0'
+    './actions/login': loginStub
   })
 
   ct.equal(processExitStub.callCount, 0, 'process.exit is not called for unknown login options')
@@ -78,8 +77,7 @@ t.test('logout resolves through native action', (ct) => {
 
   proxyquire('../../src/cli/dotenvx', {
     './../lib/helpers/executeDynamic': executeDynamicStub,
-    './actions/logout': logoutStub,
-    './../lib/helpers/getCommanderVersion': () => '11.1.0'
+    './actions/logout': logoutStub
   })
 
   ct.equal(processExitStub.callCount, 0, 'process.exit is not called for unknown logout options')
@@ -112,8 +110,7 @@ t.test('armor resolves through native command', (ct) => {
 
   proxyquire('../../src/cli/dotenvx', {
     './commands/armor': configureArmorCommandStub,
-    './../lib/helpers/executeDynamic': executeDynamicStub,
-    './../lib/helpers/getCommanderVersion': () => '11.1.0'
+    './../lib/helpers/executeDynamic': executeDynamicStub
   })
 
   ct.equal(processExitStub.callCount, 0, 'process.exit is not called for native armor command')

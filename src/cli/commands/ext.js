@@ -1,4 +1,4 @@
-const { Command } = require('commander')
+const { Command } = require('@dotenvx/tooling')
 
 const examples = require('./../examples')
 const executeExtension = require('../../lib/helpers/executeExtension')

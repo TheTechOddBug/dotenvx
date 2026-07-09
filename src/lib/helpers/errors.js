@@ -4,7 +4,6 @@ const ISSUE_BY_CODE = {
   COMMAND_EXITED_WITH_CODE: 'https://github.com/dotenvx/dotenvx/issues/new',
   COMMAND_SUBSTITUTION_FAILED: 'https://github.com/dotenvx/dotenvx/issues/532',
   DECRYPTION_FAILED: 'https://github.com/dotenvx/dotenvx/issues/757',
-  DANGEROUS_DEPENDENCY_HOIST: 'https://github.com/dotenvx/dotenvx/issues/622',
   INVALID_COLOR: 'must be 256 colors',
   INVALID_CONVENTION: 'https://github.com/dotenvx/dotenvx/issues/761',
   INVALID_PASSPHRASE: 'try again with the correct passphrase',
@@ -89,18 +88,6 @@ class Errors {
   decryptionFailed () {
     const code = 'DECRYPTION_FAILED'
     const message = `[${code}] ${this.message}`
-    const help = `fix: [${ISSUE_BY_CODE[code]}]`
-
-    const e = new Error(message)
-    e.code = code
-    e.help = help
-    e.messageWithHelp = `${message}. ${help}`
-    return e
-  }
-
-  dangerousDependencyHoist () {
-    const code = 'DANGEROUS_DEPENDENCY_HOIST'
-    const message = `[${code}] your environment has hoisted an incompatible version of a dotenvx dependency: ${this.message}`
     const help = `fix: [${ISSUE_BY_CODE[code]}]`
 
     const e = new Error(message)

@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const Conf = require('conf')
-const dotenv = require('dotenv')
+const { dotenv } = require('@dotenvx/tooling')
 const envPaths = require('env-paths')
 
 const jsonToEnv = require('./../lib/helpers/jsonToEnv')
