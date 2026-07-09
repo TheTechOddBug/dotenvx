@@ -153,6 +153,26 @@ Hello Dotenvx
 ```
 
 </details>
+<details><summary>Expo 🧭</summary><br>
+
+Preface Expo scripts with `dotenvx run --`.
+
+```json
+{
+  "scripts": {
+    "start": "dotenvx run -- expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "dotenvx run -- expo start --android",
+    "ios": "dotenvx run -- expo start --ios",
+    "web": "dotenvx run -- expo start --web",
+    "lint": "expo lint"
+  }
+}
+```
+
+see [expo guide](https://dotenvx.com/docs/secrets-in-expo)
+
+</details>
 <details><summary>Next.js ▲</summary><br>
 
 Install Dotenvx and `@dotenvx/next-env`.
@@ -2943,6 +2963,7 @@ This is known as *Decryption at Access* and is written about in [the whitepaper]
   * [Rust](https://dotenvx.com/docs/languages/rust)
 * [Frameworks](https://dotenvx.com/docs#frameworks)
   * [Astro](https://dotenvx.com/docs/frameworks/astro)
+  * [Expo](https://dotenvx.com/docs/secrets-in-expo)
   * [Express](https://dotenvx.com/docs/frameworks/express)
   * [Next](https://dotenvx.com/docs/frameworks/next)
   * [Remix](https://dotenvx.com/docs/frameworks/remix)
