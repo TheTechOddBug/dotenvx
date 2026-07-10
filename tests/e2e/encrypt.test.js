@@ -88,6 +88,37 @@ t.test('#get - multiple env keys files', ct => {
   ct.end()
 })
 
+t.test('#encrypt - multiple env keys files with existing public key', ct => {
+  execShell(`
+    echo "HELLO=World" > .env.local
+  `)
+
+  ct.equal(execShell(`${dotenvx} encrypt -f .env.local -fk .env.local.keys`), '◈ encrypted (.env.local)')
+
+  fs.appendFileSync(path.join(tempDir, '.env.local'), '\nHI=there\n')
+
+  ct.equal(execShell(`${dotenvx} encrypt -f .env.local -fk .env.production.keys -fk .env.local.keys`), '◈ encrypted (.env.local)')
+  ct.equal(execShell(`${dotenvx} get HI -f .env.local -fk .env.production.keys -fk .env.local.keys`), 'there')
+
+  ct.end()
+})
+
+t.test('#encrypt - multiple env keys files errors when creating a private key', ct => {
+  execShell(`
+    echo "HELLO=World" > .env
+  `)
+
+  const result = execShellFailure(`${dotenvx} encrypt -f .env -fk .env.local.keys -fk .env.production.keys`)
+
+  ct.equal(result.status, 1)
+  ct.equal(result.stdout, '')
+  ct.match(result.stderr, /\[MULTIPLE_ENV_KEYS_FILES\] cannot create a new private key with multiple -fk values/)
+  ct.notOk(fs.existsSync(path.join(tempDir, '.env.local.keys')), 'does not write first env keys file')
+  ct.notOk(fs.existsSync(path.join(tempDir, '.env.production.keys')), 'does not write second env keys file')
+
+  ct.end()
+})
+
 t.test('#encrypt -k', ct => {
   ct.plan(7)
 

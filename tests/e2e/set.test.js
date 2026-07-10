@@ -74,7 +74,7 @@ t.test('#set - multiple env keys files errors when creating a private key', ct =
 
   ct.equal(result.status, 1)
   ct.equal(result.stdout, '')
-  ct.match(result.stderr, /\[MULTIPLE_ENV_KEYS_FILES\] cannot create a new private key with multiple --env-keys-file values/)
+  ct.match(result.stderr, /\[MULTIPLE_ENV_KEYS_FILES\] cannot create a new private key with multiple -fk values/)
   ct.notOk(fs.existsSync(path.join(tempDir, '.env')), 'does not write env file')
   ct.notOk(fs.existsSync(path.join(tempDir, '.env.local.keys')), 'does not write first env keys file')
   ct.notOk(fs.existsSync(path.join(tempDir, '.env.production.keys')), 'does not write second env keys file')
