@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.5.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.6.0...main)
+
+## [2.6.0](https://github.com/dotenvx/dotenvx/compare/v2.5.0...v2.6.0) (2026-07-11)
+
+### Added
+
+* Support `native up|down|pull|push` for windows ([#834](https://github.com/dotenvx/dotenvx/pull/884))
 
 ## [2.5.0](https://github.com/dotenvx/dotenvx/compare/v2.4.2...v2.5.0) (2026-07-11)
 
