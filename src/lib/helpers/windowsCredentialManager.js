@@ -41,6 +41,9 @@ public static class DotenvxCredentialManager
     [DllImport("Advapi32.dll", EntryPoint = "CredReadW", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern bool CredRead(string target, uint type, uint flags, out IntPtr credentialPtr);
 
+    [DllImport("Advapi32.dll", EntryPoint = "CredDeleteW", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern bool CredDelete(string target, uint type, uint flags);
+
     [DllImport("Advapi32.dll", SetLastError = true)]
     private static extern void CredFree(IntPtr credentialPtr);
 
@@ -89,6 +92,14 @@ public static class DotenvxCredentialManager
             Marshal.ZeroFreeCoTaskMemUnicode(secretPtr);
         }
     }
+
+    public static void Delete(string target)
+    {
+        if (!CredDelete(target, CRED_TYPE_GENERIC, 0))
+        {
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+    }
 }
 '@
 
@@ -101,6 +112,8 @@ if ($payload.action -eq 'read') {
     }
 } elseif ($payload.action -eq 'write') {
     [DotenvxCredentialManager]::Write([string]$payload.target, [string]$payload.username, [string]$payload.secret)
+} elseif ($payload.action -eq 'delete') {
+    [DotenvxCredentialManager]::Delete([string]$payload.target)
 } else {
     throw "unsupported credential action"
 }
@@ -137,4 +150,12 @@ function addGenericPassword (publicKey, privateKey) {
   }
 }
 
-module.exports = { findGenericPassword, addGenericPassword }
+function deleteGenericPassword (publicKey) {
+  try {
+    run({ action: 'delete', target: target(publicKey) })
+  } catch {
+    throw new Error('failed to delete private key from Windows Credential Manager')
+  }
+}
+
+module.exports = { findGenericPassword, addGenericPassword, deleteGenericPassword }

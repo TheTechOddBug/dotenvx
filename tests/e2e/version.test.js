@@ -29,7 +29,7 @@ t.test('#--help shows armor advanced command', ct => {
 
   ct.match(output, /Professional Security:/, 'professional security section is shown')
   ct.notMatch(output, /Advanced:/, 'advanced section is not shown')
-  ct.match(output, /Professional Security:[\s\S]*native\s+⌥ move private keys into your OS secret store \(macOS supported; Windows up supported\)[\s\S]*armor\s+⛨ move private keys into Dotenvx Armor \[www\.dotenvx\.com\/armor\]/, 'professional security commands include armor')
+  ct.match(output, /Professional Security:[\s\S]*native\s+⌥ move private keys into your OS secret store \(macOS and Windows supported\)[\s\S]*armor\s+⛨ move private keys into Dotenvx Armor \[www\.dotenvx\.com\/armor\]/, 'professional security commands include armor')
   ct.notMatch(output, /\n\s+login\s+log in to move keys off-device/, 'root help does not show login')
   ct.notMatch(output, /\n\s+logout\s+log out of connected security features/, 'root help does not show logout')
   ct.match(output, /armor\s+⛨ move private keys into Dotenvx Armor \[www\.dotenvx\.com\/armor\]/, 'armor advanced command is shown')

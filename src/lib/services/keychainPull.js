@@ -4,9 +4,18 @@ const keynames = require('../conventions/keynames')
 const readEnvKey = require('../helpers/readEnvKey')
 const upsertEnvKey = require('../helpers/upsertEnvKey')
 const armoredKeyDisplay = require('../helpers/armoredKeyDisplay')
+const windowsCredentialManager = require('../helpers/windowsCredentialManager')
 
 const SECURITY_BIN = '/usr/bin/security'
 const SERVICE = 'dotenvx'
+
+function findGenericPassword (publicKey) {
+  if (process.platform === 'win32') {
+    return windowsCredentialManager.findGenericPassword(publicKey)
+  }
+
+  return execFileSync(SECURITY_BIN, ['find-generic-password', '-s', SERVICE, '-a', publicKey, '-w'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
+}
 
 class KeychainPull {
   constructor (envFile = '.env', envKeysFile = '.env.keys') {
@@ -27,9 +36,11 @@ class KeychainPull {
     let privateKey
 
     try {
-      privateKey = execFileSync(SECURITY_BIN, ['find-generic-password', '-s', SERVICE, '-a', publicKey, '-w'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
+      privateKey = findGenericPassword(publicKey)
+      if (!privateKey) throw new Error('not found')
     } catch {
-      throw new Error(`[NOT_FOUND] private key not found in macOS Keychain (${armoredKeyDisplay(publicKey)}). fix: [dotenvx native up]`)
+      const secretStore = process.platform === 'win32' ? 'Windows Credential Manager' : 'macOS Keychain'
+      throw new Error(`[NOT_FOUND] private key not found in ${secretStore} (${armoredKeyDisplay(publicKey)}). fix: [dotenvx native up]`)
     }
 
     const result = upsertEnvKey(privateKeyName, privateKey, envKeysFile)

@@ -45,6 +45,22 @@ t.test('reads a generic credential through encoded PowerShell', t => {
   t.end()
 })
 
+t.test('deletes a generic credential through encoded PowerShell', t => {
+  const execFileSync = sinon.stub().returns('')
+  const credentialManager = proxyquire(helperPath, {
+    child_process: { execFileSync }
+  })
+
+  credentialManager.deleteGenericPassword('public-key')
+
+  t.match(Buffer.from(execFileSync.firstCall.args[1][3], 'base64').toString('utf16le'), /CredDeleteW/)
+  t.same(JSON.parse(execFileSync.firstCall.args[2].input), {
+    action: 'delete',
+    target: 'dotenvx:public-key'
+  })
+  t.end()
+})
+
 t.test('sanitizes failed PowerShell writes', t => {
   const privateKey = 'private-key-that-must-not-leak'
   const execFileSync = sinon.stub().throws(new Error(`PowerShell failed with ${privateKey}`))
@@ -55,5 +71,15 @@ t.test('sanitizes failed PowerShell writes', t => {
   const error = t.throws(() => credentialManager.addGenericPassword('public-key', privateKey), /failed to save private key to Windows Credential Manager/)
 
   t.notMatch(error.message, privateKey)
+  t.end()
+})
+
+t.test('sanitizes failed PowerShell deletes', t => {
+  const execFileSync = sinon.stub().throws(new Error('PowerShell failed'))
+  const credentialManager = proxyquire(helperPath, {
+    child_process: { execFileSync }
+  })
+
+  t.throws(() => credentialManager.deleteGenericPassword('public-key'), /failed to delete private key from Windows Credential Manager/)
   t.end()
 })

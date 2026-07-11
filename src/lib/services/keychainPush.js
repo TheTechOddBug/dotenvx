@@ -3,16 +3,30 @@ const { execFileSync } = require('child_process')
 const keynames = require('../conventions/keynames')
 const readEnvKey = require('../helpers/readEnvKey')
 const armoredKeyDisplay = require('../helpers/armoredKeyDisplay')
+const windowsCredentialManager = require('../helpers/windowsCredentialManager')
 
 const SECURITY_BIN = '/usr/bin/security'
 const SERVICE = 'dotenvx'
 
 function addGenericPassword (publicKey, label, privateKey) {
+  if (process.platform === 'win32') {
+    windowsCredentialManager.addGenericPassword(publicKey, privateKey)
+    return
+  }
+
   try {
     execFileSync(SECURITY_BIN, ['add-generic-password', '-U', '-s', SERVICE, '-a', publicKey, '-l', label, '-w', privateKey], { stdio: 'ignore' })
   } catch {
     throw new Error('failed to save private key to macOS Keychain')
   }
+}
+
+function findGenericPassword (publicKey) {
+  if (process.platform === 'win32') {
+    return windowsCredentialManager.findGenericPassword(publicKey)
+  }
+
+  return execFileSync(SECURITY_BIN, ['find-generic-password', '-s', SERVICE, '-a', publicKey, '-w'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
 }
 
 class KeychainPush {
@@ -35,7 +49,7 @@ class KeychainPush {
     const label = `dotenvx (${armoredKeyDisplay(publicKey)})`
 
     try {
-      const existingPrivateKey = execFileSync(SECURITY_BIN, ['find-generic-password', '-s', SERVICE, '-a', publicKey, '-w'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
+      const existingPrivateKey = findGenericPassword(publicKey)
 
       if (existingPrivateKey === privateKey) {
         return {
