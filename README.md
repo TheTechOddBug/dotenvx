@@ -2482,9 +2482,9 @@ $ dotenvx lock down
 </details>
 <details><summary>`native`</summary><br>
 
-Move private keys into your OS secret store (macOS Keychain supported).
+Move private keys into your OS secret store.
 
-Currently supported on macOS.
+All native commands support macOS Keychain. On Windows, `native up` supports Windows Credential Manager.
 
 </details>
 <details><summary>`native up`</summary><br>
@@ -2646,7 +2646,7 @@ Commands:
  
 Professional Security: 
   lock                     ⊡ lock private keys with a local passphrase
-  native                   ⌥ move private keys into your OS secret store (macOS Keychain supported)
+  native                   ⌥ move private keys into your OS secret store (macOS supported; Windows up supported)
   armor                    ⛨ move private keys into Dotenvx Armor [www.dotenvx.com/armor]
 ```
 

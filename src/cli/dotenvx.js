@@ -260,7 +260,7 @@ program.command('help [command]')
 program.addHelpText('after', ' ')
 program.addHelpText('after', 'Professional Security: ')
 program.addHelpText('after', '  lock                     ⊡ lock private keys with a local passphrase')
-program.addHelpText('after', '  native                   ⌥ move private keys into your OS secret store (macOS Keychain supported)')
+program.addHelpText('after', '  native                   ⌥ move private keys into your OS secret store (macOS supported; Windows up supported)')
 program.addHelpText('after', '  armor                    ⛨ move private keys into Dotenvx Armor [www.dotenvx.com/armor]')
 
 // dotenvx native

@@ -111,6 +111,67 @@ jobs:
             Write-Output "expected .env.local to contain encrypted value"
             exit 1
           }
+  test-npm-powershell-native-up:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20.x
+      - name: verify native up with Windows Credential Manager
+        shell: pwsh
+        run: |
+          npm install
+          $TARBALL = npm pack
+          mkdir fixture
+          cd fixture
+          npm init -y
+          npm install "..\$TARBALL"
+
+          $PUBLIC_KEY = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+          $PRIVATE_KEY = "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"
+          $TARGET = "dotenvx:$PUBLIC_KEY"
+
+          & cmdkey.exe "/delete:$TARGET" | Out-Null
+
+          try {
+            "DOTENV_PUBLIC_KEY=`"$PUBLIC_KEY`"" | Out-File -FilePath .env -Encoding utf8NoBOM
+            "DOTENV_PRIVATE_KEY=`"$PRIVATE_KEY`"" | Out-File -FilePath .env.keys -Encoding utf8NoBOM
+
+            $FIRST_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native up
+            $FIRST_EXIT_CODE = $LASTEXITCODE
+            $FIRST_OUTPUT_TEXT = $FIRST_OUTPUT -join [Environment]::NewLine
+            Write-Output $FIRST_OUTPUT_TEXT
+            if ($FIRST_EXIT_CODE -ne 0) {
+              Write-Output "first native up failed with exit code $FIRST_EXIT_CODE"
+              exit $FIRST_EXIT_CODE
+            }
+            if ($FIRST_OUTPUT_TEXT -notmatch "stored") {
+              Write-Output "expected first native up to store the key, got '$FIRST_OUTPUT_TEXT'"
+              exit 1
+            }
+            if (Test-Path .env.keys) {
+              Write-Output "expected native up to remove .env.keys"
+              exit 1
+            }
+
+            $SECOND_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native up
+            $SECOND_EXIT_CODE = $LASTEXITCODE
+            $SECOND_OUTPUT_TEXT = $SECOND_OUTPUT -join [Environment]::NewLine
+            Write-Output $SECOND_OUTPUT_TEXT
+            if ($SECOND_EXIT_CODE -ne 0) {
+              Write-Output "second native up could not read the stored credential"
+              exit $SECOND_EXIT_CODE
+            }
+            if ($SECOND_OUTPUT_TEXT -notmatch "no change") {
+              Write-Output "expected second native up to read the stored key, got '$SECOND_OUTPUT_TEXT'"
+              exit 1
+            }
+          } finally {
+            & cmdkey.exe "/delete:$TARGET" | Out-Null
+          }
   test-pkg:
     runs-on: ubuntu-latest
     strategy:
