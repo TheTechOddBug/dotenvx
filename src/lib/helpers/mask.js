@@ -4,13 +4,15 @@ function mask (str, showChar = 6) {
   }
 
   const number = Number(showChar)
-  showChar = Number.isFinite(number) ? Math.abs(Math.trunc(number)) : 0
+  showChar = 0
+  if (Number.isFinite(number)) {
+    showChar = Math.abs(Math.trunc(number))
+  }
 
-  const visibleChars = str.length === 1
-    ? 0
-    : str.length <= showChar
-      ? Math.ceil(str.length / 2)
-      : showChar
+  let visibleChars = Math.min(showChar, Math.ceil(str.length / 2))
+  if (str.length === 1) {
+    visibleChars = 0
+  }
   const visiblePart = str.slice(0, visibleChars)
   const maskedPart = '*'.repeat(str.length - visibleChars)
 

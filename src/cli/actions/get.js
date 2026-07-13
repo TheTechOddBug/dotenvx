@@ -57,7 +57,11 @@ async function get (key) {
 
     if (spinner) spinner.stop()
     if (options.mask !== undefined) {
-      const showChar = options.mask === true ? 6 : options.mask
+      let showChar = options.mask
+      if (options.mask === true) {
+        showChar = 6
+      }
+
       for (const key of Object.keys(parsed)) {
         parsed[key] = mask(parsed[key], showChar)
       }
