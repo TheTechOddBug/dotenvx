@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.7.2...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.7.3...main)
+
+## [2.7.3](https://github.com/dotenvx/dotenvx/compare/v2.7.2...v2.7.3) (2026-07-13)
+
+### Changed
+
+* Fix: `--quiet` should not display the spinner and its stderr messages ([#889](https://github.com/dotenvx/dotenvx/pull/889))
 
 ## [2.7.2](https://github.com/dotenvx/dotenvx/compare/v2.7.1...v2.7.2) (2026-07-13)
 
