@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 [Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.7.3...main)
 
+### Added
+
+* Add `FILE_NOT_WRITABLE` error for user convenience ([#891](https://github.com/dotenvx/dotenvx/pull/891))
+
 ## [2.7.3](https://github.com/dotenvx/dotenvx/compare/v2.7.2...v2.7.3) (2026-07-13)
 
 ### Changed
