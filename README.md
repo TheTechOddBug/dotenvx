@@ -131,10 +131,10 @@ More examples
 Run Claude with your real secrets while redacting them from its output.
 
 ```sh
-$ echo "SECRET=super-secret-value" > .env
+$ echo "HELLO=World" > .env
 
-$ dotenvx run --redact --quiet -- claude -p 'Print the value of $SECRET'
-[REDACTED]
+$ dotenvx run --redact -- claude -p 'Run `dotenvx get HELLO` and echo back just Hello VALUE' --dangerously-skip-permissions
+Hello [REDACTED]
 ```
 
 see [Claude redaction guide](https://dotenvx.com/docs/cli/run-redact-claude-print)
@@ -145,10 +145,10 @@ see [Claude redaction guide](https://dotenvx.com/docs/cli/run-redact-claude-prin
 Run Codex with your real secrets while redacting them from its output.
 
 ```sh
-$ echo "SECRET=super-secret-value" > .env
+$ echo "HELLO=World" > .env
 
-$ dotenvx run --redact --quiet -- codex exec 'Print the value of $SECRET'
-[REDACTED]
+$ dotenvx run --redact -- codex exec 'Run `dotenvx get HELLO` and echo back just Hello VALUE' --skip-git-repo-check
+Hello [REDACTED]
 ```
 
 see [Codex redaction guide](https://dotenvx.com/docs/cli/run-redact-codex-exec)
