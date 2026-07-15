@@ -227,6 +227,13 @@ program.command('doctor', { hidden: true })
     return require('./actions/doctor').apply(this, args)
   })
 
+// dotenvx update
+program.command('update')
+  .description('update dotenvx')
+  .action(function (...args) {
+    return require('./actions/update').apply(this, args)
+  })
+
 // dotenvx login (compatibility alias for dotenvx armor login)
 program.command('login', { hidden: true })
   .description('log in to move keys off-device, share with your team, and audit access')

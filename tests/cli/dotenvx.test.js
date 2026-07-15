@@ -34,6 +34,7 @@ t.test('default help lists direct utility commands with ls first after keypair',
   ct.match(commands, /genexample \[directory\]\s+generate \.env\.example/)
   ct.match(commands, /prebuild \[directory\]\s+prevent including \.env files/)
   ct.match(commands, /precommit \[directory\]\s+prevent committing \.env files/)
+  ct.match(commands, /update\s+update dotenvx/)
   ct.match(commands, /ls \[directory\]\s+print all \.env files/)
   ct.notMatch(commands, /scan\s+scan for leaked secrets/)
   ct.notMatch(commands, /ext\s+.*extensions/)
