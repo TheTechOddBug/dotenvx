@@ -3,8 +3,9 @@ const { which } = require('@dotenvx/tooling')
 const execute = require('./../../lib/helpers/execute')
 const { logger } = require('./../../shared/logger')
 const Errors = require('./errors')
+const { createRedactedStreamWriter, redactOutput } = require('./redactOutput')
 
-async function executeCommand (commandArgs, env) {
+async function executeCommand (commandArgs, env, sensitiveValues = []) {
   const FORWARD_SIGNAL_GRACE_MS = 1000
   const FORCE_KILL_GRACE_MS = 1000
   const signals = [
@@ -130,10 +131,25 @@ async function executeCommand (commandArgs, env) {
       }
     }
 
+    const redactStdout = sensitiveValues.length > 0
+    const redactStderr = sensitiveValues.length > 0
+
     child = execute.execa(commandArgs[0], commandArgs.slice(1), {
-      stdio: 'inherit',
+      stdio: ['inherit', redactStdout ? 'pipe' : 'inherit', redactStderr ? 'pipe' : 'inherit'],
       env: { ...process.env, ...env }
     })
+
+    if (redactStdout && child.stdout) {
+      const stdoutWriter = createRedactedStreamWriter(process.stdout, sensitiveValues)
+      child.stdout.on('data', stdoutWriter.write)
+      child.stdout.once('end', stdoutWriter.flush)
+    }
+
+    if (redactStderr && child.stderr) {
+      const stderrWriter = createRedactedStreamWriter(process.stderr, sensitiveValues)
+      child.stderr.on('data', stderrWriter.write)
+      child.stderr.once('end', stderrWriter.flush)
+    }
 
     process.on('SIGINT', sigintHandler)
     process.on('SIGTERM', sigtermHandler)
@@ -157,7 +173,7 @@ async function executeCommand (commandArgs, env) {
       if (error.code === 'ENOENT') {
         logger.error(`Unknown command: ${error.command}`)
       } else {
-        logger.error(error.message)
+        logger.error(redactOutput(error.message, sensitiveValues))
       }
     }
 

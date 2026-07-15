@@ -13,6 +13,8 @@ const resolveEnvKeysFile = require('../../lib/helpers/resolveEnvKeysFile')
 const mask = require('../../lib/helpers/mask')
 const maskEnvSrc = require('../../lib/helpers/maskEnvSrc')
 const maskProcessedEnvs = require('../../lib/helpers/maskProcessedEnvs')
+const decryptedValues = require('../../lib/helpers/decryptedValues')
+const { redactOutput } = require('../../lib/helpers/redactOutput')
 
 const { determine } = require('./../../lib/helpers/envResolution')
 
@@ -53,11 +55,13 @@ async function run () {
   const options = normalizeDotenvConfigConvention(normalizeDotenvConfigQuiet(this.opts()))
   const spinnerOptions = typeof this.optsWithGlobals === 'function' ? this.optsWithGlobals() : options
   const maskEnabled = options.mask !== undefined
+  const redactEnabled = options.redact !== false
   let showChar = options.mask
   if (options.mask === true) {
     showChar = 6
   }
   let commandEnv = process.env
+  let sensitiveValues = []
 
   let commandArgs = this.args
   if (commandArgs.length < 1) {
@@ -122,6 +126,10 @@ async function run () {
       }
     })
 
+    if (redactEnabled) {
+      sensitiveValues = decryptedValues(processedEnvs)
+    }
+
     if (maskEnabled) {
       commandEnv = { ...process.env }
       maskProcessedEnvs(processedEnvs, commandEnv, showChar)
@@ -156,18 +164,18 @@ async function run () {
       }
 
       // debug parsed
-      logger.debug(processedEnv.parsed)
+      logger.debug(redactOutput(processedEnv.parsed, sensitiveValues))
 
       // verbose/debug injected key/value
       for (const [key, value] of Object.entries(processedEnv.injected || {})) {
         logger.verbose(`${key} set`)
-        logger.debug(`${key} set to ${value}`)
+        logger.debug(redactOutput(`${key} set to ${value}`, sensitiveValues))
       }
 
       // verbose/debug existed key/value
       for (const [key, value] of Object.entries(processedEnv.existed || {})) {
         logger.verbose(`${key} pre-exists (protip: use --overload to override)`)
-        logger.debug(`${key} pre-exists as ${value} (protip: use --overload to override)`)
+        logger.debug(redactOutput(`${key} pre-exists as ${value} (protip: use --overload to override)`, sensitiveValues))
       }
     }
 
@@ -189,7 +197,7 @@ async function run () {
     process.exit(1)
   }
 
-  await executeCommand(commandArgs, commandEnv)
+  await executeCommand(commandArgs, commandEnv, sensitiveValues)
 }
 
 module.exports = run

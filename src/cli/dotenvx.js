@@ -70,6 +70,7 @@ program.command('run')
   .option('--ignore <errorCodes...>', 'error code(s) to ignore (example: --ignore=MISSING_ENV_FILE)')
   .option('--token <token>', 'set Armor ⛨ token')
   .option('--mask [characters]', 'inject masked values, optionally setting visible characters')
+  .option('--no-redact', 'disable redaction of decrypted values from command output')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
   .action(function (...args) {
