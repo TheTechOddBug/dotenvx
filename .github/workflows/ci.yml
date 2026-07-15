@@ -94,7 +94,7 @@ jobs:
           "console.log(process.env.HELLO)" | Out-File -FilePath index.js -Encoding utf8
           Get-ChildItem .\node_modules\.bin\dotenvx*
           Get-Command .\node_modules\.bin\dotenvx.ps1
-          $OUTPUT = .\node_modules\.bin\dotenvx.ps1 run --quiet -f .env.testing -- node index.js
+          $OUTPUT = .\node_modules\.bin\dotenvx.ps1 run --quiet --no-redact -f .env.testing -- node index.js
           Write-Output $OUTPUT
           if ($OUTPUT -ne "PowerShell") {
             Write-Output "expected PowerShell, got '$OUTPUT'"
@@ -326,7 +326,7 @@ jobs:
           cd bin/linux-x86_64/
           echo "HELLO=Ubuntu" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(./dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(./dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Ubuntu" ]; then
             echo "postrelease dotenvx run failure: expected Hello Ubuntu, got $EXPECTED_MESSAGE"
@@ -343,7 +343,7 @@ jobs:
           cd bin/linux-x86_64/
           echo "HELLO=Ubuntu" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(./dotenvx run --quiet -- ./dotenvx run --quiet -- ./dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(./dotenvx run --quiet --no-redact -- ./dotenvx run --quiet --no-redact -- ./dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Ubuntu" ]; then
             echo "postrelease dotenvx nested invocations: expected Hello Ubuntu, got $EXPECTED_MESSAGE"
@@ -355,7 +355,7 @@ jobs:
           echo "HELLO=Ubuntu" > .env
           ./dotenvx encrypt
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(./dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(./dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Ubuntu" ]; then
             echo "postrelease dotenvx run failure: expected Hello Ubuntu, got $EXPECTED_MESSAGE"
@@ -368,7 +368,7 @@ jobs:
             exit 1
           fi
           ./dotenvx decrypt
-          EXPECTED_MESSAGE=$(./dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(./dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Ubuntu" ]; then
             echo "postrelease dotenvx run failure: expected Hello Ubuntu, got $EXPECTED_MESSAGE"
@@ -769,7 +769,7 @@ jobs:
           npm install @dotenvx/dotenvx --save
           echo "HELLO=NPM" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(npx @dotenvx/dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(npx @dotenvx/dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello NPM" ]; then
             echo "postrelease dotenvx run failure: expected Hello NPM, got $EXPECTED_MESSAGE"
@@ -810,7 +810,7 @@ jobs:
         run: |
           echo "HELLO=Ubuntu" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Ubuntu" ]; then
             echo "postrelease dotenvx run failure: expected Hello Ubuntu, got $EXPECTED_MESSAGE"
@@ -826,7 +826,7 @@ jobs:
         run: |
           echo "HELLO=Ubuntu" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(dotenvx run --quiet -- dotenvx run --quiet -- dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(dotenvx run --quiet --no-redact -- dotenvx run --quiet --no-redact -- dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Ubuntu" ]; then
             echo "postrelease dotenvx nested invocations: expected Hello Ubuntu, got $EXPECTED_MESSAGE"
@@ -861,7 +861,7 @@ jobs:
         run: |
           echo "HELLO=Mac" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Mac" ]; then
             echo "postrelease dotenvx run failure: expected Hello Mac, got $EXPECTED_MESSAGE"
@@ -877,7 +877,7 @@ jobs:
         run: |
           echo "HELLO=Mac" > .env
           echo "console.log('Hello ' + process.env.HELLO)" > index.js
-          EXPECTED_MESSAGE=$(dotenvx run --quiet -- dotenvx run --quiet -- dotenvx run --quiet -- node index.js)
+          EXPECTED_MESSAGE=$(dotenvx run --quiet --no-redact -- dotenvx run --quiet --no-redact -- dotenvx run --quiet --no-redact -- node index.js)
           echo $EXPECTED_MESSAGE
           if [ "$EXPECTED_MESSAGE" != "Hello Mac" ]; then
             echo "postrelease dotenvx run failure: expected Hello Mac, got $EXPECTED_MESSAGE"
@@ -920,7 +920,7 @@ jobs:
         run: |
           "HELLO=Windows" | Out-File -FilePath .env
           "console.log('Hello ' + process.env.HELLO)" | Out-File -FilePath index.js
-          $EXPECTED_MESSAGE = .\dotenvx\dotenvx.exe run --quiet -- node index.js
+          $EXPECTED_MESSAGE = .\dotenvx\dotenvx.exe run --quiet --no-redact -- node index.js
           Write-Output "Expected Message: $EXPECTED_MESSAGE"
           if ($EXPECTED_MESSAGE -ne "Hello Windows") {
             Write-Output "postrelease dotenvx run failure: expected 'Hello Windows', got '$EXPECTED_MESSAGE'"
@@ -937,7 +937,7 @@ jobs:
         run: |
           "HELLO=Windows" | Out-File -FilePath .env
           "console.log('Hello ' + process.env.HELLO)" | Out-File -FilePath index.js
-          $EXPECTED_MESSAGE = .\dotenvx\dotenvx.exe run --quiet -- .\dotenvx\dotenvx.exe run --quiet -- .\dotenvx\dotenvx.exe run --quiet -- node index.js
+          $EXPECTED_MESSAGE = .\dotenvx\dotenvx.exe run --quiet --no-redact -- .\dotenvx\dotenvx.exe run --quiet --no-redact -- .\dotenvx\dotenvx.exe run --quiet --no-redact -- node index.js
           Write-Output "Expected Message: $EXPECTED_MESSAGE"
           if ($EXPECTED_MESSAGE -ne "Hello Windows") {
             Write-Output "postrelease dotenvx run failure: expected 'Hello Windows', got '$EXPECTED_MESSAGE'"
@@ -963,7 +963,7 @@ jobs:
             -v $(pwd):/workspace \
             -w /workspace \
             oven/bun:1.1.25-alpine \
-            sh -c "bunx @dotenvx/dotenvx@$EXPECTED_VERSION run --overload --quiet -- sh -c 'echo Hello \$HELLO'" | tee output.txt
+            sh -c "bunx @dotenvx/dotenvx@$EXPECTED_VERSION run --overload --quiet --no-redact -- sh -c 'echo Hello \$HELLO'" | tee output.txt
           output=$(cat output.txt)
           if [ "$output" != "Hello Bun" ]; then
             echo "postrelease dotenvx run failure: expected Hello Bun, got $output"
