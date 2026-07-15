@@ -28,24 +28,24 @@ printf '%s\n' 'HELLO=LinuxNative' > .env
 PUBLIC_KEY="$(grep '^DOTENV_PUBLIC_KEY=' .env | tail -n 1 | cut -d= -f2- | tr -d '"')"
 PRIVATE_KEY="$(grep '^DOTENV_PRIVATE_KEY=' .env.keys | tail -n 1 | cut -d= -f2- | tr -d '"')"
 
-"$DOTENVX" native up | grep 'stored'
+"$DOTENVX" native up 2>&1 | grep 'stored'
 test ! -f .env.keys
 
-"$DOTENVX" native up | grep 'no change'
+"$DOTENVX" native up 2>&1 | grep 'no change'
 test "$("$DOTENVX" get HELLO)" = 'LinuxNative'
 
-"$DOTENVX" native down | grep 'moved to .env.keys'
+"$DOTENVX" native down 2>&1 | grep 'moved to .env.keys'
 grep -q "$PRIVATE_KEY" .env.keys
 
-"$DOTENVX" native down | grep 'no change'
+"$DOTENVX" native down 2>&1 | grep 'no change'
 
-"$DOTENVX" native push | grep 'pushed'
+"$DOTENVX" native push 2>&1 | grep 'pushed'
 test -f .env.keys
 
 rm .env.keys
-"$DOTENVX" native pull | grep 'pulled to .env.keys'
+"$DOTENVX" native pull 2>&1 | grep 'pulled to .env.keys'
 grep -q "$PRIVATE_KEY" .env.keys
 
 rm .env.keys
-"$DOTENVX" native pull | grep 'pulled to .env.keys'
+"$DOTENVX" native pull 2>&1 | grep 'pulled to .env.keys'
 grep -q "$PRIVATE_KEY" .env.keys

@@ -168,7 +168,7 @@ jobs:
           & cmdkey.exe "/delete:$TARGET" | Out-Null
 
           try {
-            $FIRST_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native up
+            $FIRST_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native up 2>&1
             $FIRST_EXIT_CODE = $LASTEXITCODE
             $FIRST_OUTPUT_TEXT = $FIRST_OUTPUT -join [Environment]::NewLine
             Write-Output $FIRST_OUTPUT_TEXT
@@ -185,7 +185,7 @@ jobs:
               exit 1
             }
 
-            $SECOND_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native up
+            $SECOND_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native up 2>&1
             $SECOND_EXIT_CODE = $LASTEXITCODE
             $SECOND_OUTPUT_TEXT = $SECOND_OUTPUT -join [Environment]::NewLine
             Write-Output $SECOND_OUTPUT_TEXT
@@ -213,7 +213,7 @@ jobs:
               exit 1
             }
 
-            $DOWN_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native down
+            $DOWN_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native down 2>&1
             $DOWN_EXIT_CODE = $LASTEXITCODE
             $DOWN_OUTPUT_TEXT = $DOWN_OUTPUT -join [Environment]::NewLine
             Write-Output $DOWN_OUTPUT_TEXT
@@ -230,7 +230,7 @@ jobs:
               exit 1
             }
 
-            $SECOND_DOWN_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native down
+            $SECOND_DOWN_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native down 2>&1
             $SECOND_DOWN_EXIT_CODE = $LASTEXITCODE
             $SECOND_DOWN_OUTPUT_TEXT = $SECOND_DOWN_OUTPUT -join [Environment]::NewLine
             Write-Output $SECOND_DOWN_OUTPUT_TEXT
@@ -243,7 +243,7 @@ jobs:
               exit 1
             }
 
-            $PUSH_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native push
+            $PUSH_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native push 2>&1
             $PUSH_EXIT_CODE = $LASTEXITCODE
             $PUSH_OUTPUT_TEXT = $PUSH_OUTPUT -join [Environment]::NewLine
             Write-Output $PUSH_OUTPUT_TEXT
@@ -261,7 +261,7 @@ jobs:
             }
 
             Remove-Item .env.keys
-            $PULL_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native pull
+            $PULL_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native pull 2>&1
             $PULL_EXIT_CODE = $LASTEXITCODE
             $PULL_OUTPUT_TEXT = $PULL_OUTPUT -join [Environment]::NewLine
             Write-Output $PULL_OUTPUT_TEXT
@@ -279,7 +279,7 @@ jobs:
             }
 
             Remove-Item .env.keys
-            $SECOND_PULL_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native pull
+            $SECOND_PULL_OUTPUT = .\node_modules\.bin\dotenvx.ps1 native pull 2>&1
             $SECOND_PULL_EXIT_CODE = $LASTEXITCODE
             $SECOND_PULL_OUTPUT_TEXT = $SECOND_PULL_OUTPUT -join [Environment]::NewLine
             Write-Output $SECOND_PULL_OUTPUT_TEXT
