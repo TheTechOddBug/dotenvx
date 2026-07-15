@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.10.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.11.0...main)
+
+## [2.11.0](https://github.com/dotenvx/dotenvx/compare/v2.10.0...v2.11.0) (2026-07-15)
+
+### Added
+
+* Add convenience method `dotenvx update` ([#897](https://github.com/dotenvx/dotenvx/pull/897))
+
+### Changed
+
+* BREAKING: Send informational messages like `injected env` to stderr instead of stdout. This makes it more reliable to do things like piping output to a file without needing `--quiet`. ([#898](https://github.com/dotenvx/dotenvx/pull/898))
 
 ## [2.10.0](https://github.com/dotenvx/dotenvx/compare/v2.9.0...v2.10.0) (2026-07-15)
 
