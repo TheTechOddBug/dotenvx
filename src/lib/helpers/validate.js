@@ -16,7 +16,9 @@ function validate (example = {}, env = {}, options = {}) {
   const optional = optionalKeys(options.comments || {})
 
   for (const key of Object.keys(example)) {
-    if (!optional.has(key) && !Object.prototype.hasOwnProperty.call(env, key)) {
+    const value = env[key]
+    const missing = !Object.prototype.hasOwnProperty.call(env, key) || value.trim() === ''
+    if (!optional.has(key) && missing) {
       missingRequired.push(key)
     }
   }

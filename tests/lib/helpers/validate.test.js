@@ -11,9 +11,33 @@ t.test('validate accepts an empty example', t => {
 })
 
 t.test('validate accepts required keys that exist', t => {
-  t.same(validate({ HELLO: '' }, { HELLO: '' }), {
+  t.same(validate({ HELLO: '' }, { HELLO: 'World' }), {
     valid: true,
     errors: []
+  })
+  t.end()
+})
+
+t.test('validate rejects required keys with empty values', t => {
+  t.same(validate({ HELLO: '' }, { HELLO: '' }), {
+    valid: false,
+    errors: [{
+      code: 'MISSING_REQUIRED',
+      keys: ['HELLO'],
+      message: 'missing required (HELLO)'
+    }]
+  })
+  t.end()
+})
+
+t.test('validate rejects required keys with whitespace-only values', t => {
+  t.same(validate({ HELLO: '' }, { HELLO: ' \t' }), {
+    valid: false,
+    errors: [{
+      code: 'MISSING_REQUIRED',
+      keys: ['HELLO'],
+      message: 'missing required (HELLO)'
+    }]
   })
   t.end()
 })
