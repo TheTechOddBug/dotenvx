@@ -94,7 +94,7 @@ program.command('get')
   .option('--mask [characters]', 'mask values, optionally setting visible characters')
   .option('-pp, --pretty-print', 'pretty print output')
   .option('--pp', 'pretty print output (alias)')
-  .option('--format <type>', 'format of the output (json, shell, colon, eval)', 'json')
+  .option('--format <type>', 'format of the output (json, shell, colon, eval, eval-export)', 'json')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
   .action(function (...args) {

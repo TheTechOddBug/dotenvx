@@ -76,10 +76,11 @@ async function get (key) {
         console.log(single)
       }
     } else {
-      if (options.format === 'eval') {
+      if (options.format === 'eval' || options.format === 'eval-export') {
+        const prefix = options.format === 'eval-export' ? 'export ' : ''
         let inline = ''
         for (const [key, value] of Object.entries(parsed)) {
-          inline += `${key}=${escape(value)}\n`
+          inline += `${prefix}${key}=${escape(value)}\n`
         }
         inline = inline.trim()
 
