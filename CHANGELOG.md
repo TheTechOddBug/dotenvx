@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.11.1...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.11.2...main)
+
+## [2.11.2](https://github.com/dotenvx/dotenvx/compare/v2.11.1...v2.11.2) (2026-07-16)
+
+### Changed
+
+* Bump @dotenvx/primtivies to support nested node invocations for pkg-ed binary ([#901](https://github.com/dotenvx/dotenvx/pull/901))
 
 ## [2.11.1](https://github.com/dotenvx/dotenvx/compare/v2.11.0...v2.11.1) (2026-07-15)
 
