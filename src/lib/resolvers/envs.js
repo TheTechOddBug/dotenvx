@@ -12,6 +12,7 @@ const keynames = require('./../conventions/keynames')
 const providers = require('./../providers')
 const decryptors = require('./../decryptors')
 const parseWithDecryptor = require('./../helpers/parseWithDecryptor')
+const resolveOnePassword = require('./../helpers/resolveOnePassword')
 
 function unresolvedEncryptedErrors (parsed) {
   const keys = []
@@ -101,6 +102,9 @@ async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider
     row.injected = injected || {}
     row.existed = existed || {}
 
+    await resolveOnePassword(row.injected)
+    Object.assign(row.parsed, row.injected)
+
     inject(processEnv, row.parsed)
   } catch (e) {
     row.errors = [e]
@@ -139,6 +143,9 @@ function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, 
     row.errors = decryptErrors(parsed, errors)
     row.injected = injected || {}
     row.existed = existed || {}
+
+    resolveOnePassword.sync(row.injected)
+    Object.assign(row.parsed, row.injected)
 
     inject(processEnv, row.parsed)
   } catch (e) {
@@ -181,6 +188,9 @@ async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, prov
     row.injected = injected || {}
     row.errors = decryptErrors(parsed, errors)
     row.existed = existed || {}
+
+    await resolveOnePassword(row.injected)
+    Object.assign(row.parsed, row.injected)
 
     inject(processEnv, parsed)
   } catch (e) {
@@ -227,6 +237,9 @@ function injectEnvFileSync ({ env, overload, processEnv, envKeysFilepath, provid
     row.injected = injected || {}
     row.errors = decryptErrors(parsed, errors)
     row.existed = existed || {}
+
+    resolveOnePassword.sync(row.injected)
+    Object.assign(row.parsed, row.injected)
 
     inject(processEnv, parsed)
   } catch (e) {
