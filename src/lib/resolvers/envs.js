@@ -13,6 +13,7 @@ const providers = require('./../providers')
 const decryptors = require('./../decryptors')
 const parseWithDecryptor = require('./../helpers/parseWithDecryptor')
 const resolveOnePassword = require('./../helpers/resolveOnePassword')
+const resolveBitwardenSecrets = require('./../helpers/resolveBitwardenSecrets')
 
 function unresolvedEncryptedErrors (parsed) {
   const keys = []
@@ -71,7 +72,7 @@ function buildParseOptions ({ processEnv, overload, envKeysFilepath, provider, d
   return options
 }
 
-async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password }) {
+async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password, noBitwarden }) {
   const row = {}
   row.type = TYPE_ENV
   row.string = env.value
@@ -109,6 +110,13 @@ async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider
       Object.assign(row.parsed, row.injected)
     }
 
+    if (!noBitwarden) {
+      const result = await resolveBitwardenSecrets(row.injected)
+      row.errors.push(...result.errors)
+      for (const key of result.unresolved) delete row.parsed[key]
+      Object.assign(row.parsed, row.injected)
+    }
+
     inject(processEnv, row.parsed)
   } catch (e) {
     row.errors = [e]
@@ -117,7 +125,7 @@ async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider
   return row
 }
 
-function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password }) {
+function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password, noBitwarden }) {
   const row = {}
   row.type = TYPE_ENV
   row.string = env.value
@@ -155,6 +163,13 @@ function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, 
       Object.assign(row.parsed, row.injected)
     }
 
+    if (!noBitwarden) {
+      const result = resolveBitwardenSecrets.sync(row.injected)
+      row.errors.push(...result.errors)
+      for (const key of result.unresolved) delete row.parsed[key]
+      Object.assign(row.parsed, row.injected)
+    }
+
     inject(processEnv, row.parsed)
   } catch (e) {
     row.errors = [e]
@@ -163,7 +178,7 @@ function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, 
   return row
 }
 
-async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password }) {
+async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password, noBitwarden }) {
   const row = {}
   row.type = TYPE_ENV_FILE
   row.filepath = env.value
@@ -204,6 +219,13 @@ async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, prov
       Object.assign(row.parsed, row.injected)
     }
 
+    if (!noBitwarden) {
+      const result = await resolveBitwardenSecrets(row.injected)
+      row.errors.push(...result.errors)
+      for (const key of result.unresolved) delete row.parsed[key]
+      Object.assign(row.parsed, row.injected)
+    }
+
     inject(processEnv, parsed)
   } catch (e) {
     if (e.code === 'ENOENT' || e.code === 'EISDIR') {
@@ -216,7 +238,7 @@ async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, prov
   return row
 }
 
-function injectEnvFileSync ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password }) {
+function injectEnvFileSync ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password, noBitwarden }) {
   const row = {}
   row.type = TYPE_ENV_FILE
   row.filepath = env.value
@@ -257,6 +279,13 @@ function injectEnvFileSync ({ env, overload, processEnv, envKeysFilepath, provid
       Object.assign(row.parsed, row.injected)
     }
 
+    if (!noBitwarden) {
+      const result = resolveBitwardenSecrets.sync(row.injected)
+      row.errors.push(...result.errors)
+      for (const key of result.unresolved) delete row.parsed[key]
+      Object.assign(row.parsed, row.injected)
+    }
+
     inject(processEnv, parsed)
   } catch (e) {
     if (e.code === 'ENOENT' || e.code === 'EISDIR') {
@@ -287,7 +316,8 @@ async function envs (options = {}) {
         provider,
         decryptor,
         readableFilepaths,
-        no1Password: options.no1Password
+        no1Password: options.no1Password,
+        noBitwarden: options.noBitwarden
       }))
     } else if (env.type === TYPE_ENV) {
       processedEnvs.push(await injectEnv({
@@ -297,7 +327,8 @@ async function envs (options = {}) {
         envKeysFilepath,
         provider,
         decryptor,
-        no1Password: options.no1Password
+        no1Password: options.no1Password,
+        noBitwarden: options.noBitwarden
       }))
     }
   }
@@ -326,7 +357,8 @@ function envsSync (options = {}) {
         provider,
         decryptor,
         readableFilepaths,
-        no1Password: options.no1Password
+        no1Password: options.no1Password,
+        noBitwarden: options.noBitwarden
       }))
     } else if (env.type === TYPE_ENV) {
       processedEnvs.push(injectEnvSync({
@@ -336,7 +368,8 @@ function envsSync (options = {}) {
         envKeysFilepath,
         provider,
         decryptor,
-        no1Password: options.no1Password
+        no1Password: options.no1Password,
+        noBitwarden: options.noBitwarden
       }))
     }
   }

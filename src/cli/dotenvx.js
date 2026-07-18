@@ -75,6 +75,7 @@ program.command('run')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
   .option('--no-1password', 'disable 1Password secret reference resolution')
+  .option('--no-bitwarden', 'disable Bitwarden secret reference resolution')
   .action(function (...args) {
     this.envs = envs
     return require('./actions/run').apply(this, args)
@@ -100,6 +101,7 @@ program.command('get')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
   .option('--no-1password', 'disable 1Password secret reference resolution')
+  .option('--no-bitwarden', 'disable Bitwarden secret reference resolution')
   .action(function (...args) {
     this.envs = envs
     return require('./actions/get').apply(this, args)
@@ -216,6 +218,7 @@ program.command('validate')
   .option('--no-armor', 'disable Dotenvx Armor features')
   .option('--no-native', 'disable OS secret store features')
   .option('--no-1password', 'disable 1Password secret reference resolution')
+  .option('--no-bitwarden', 'disable Bitwarden secret reference resolution')
   .action(function (...args) {
     this.envs = envs
     return require('./actions/validate').apply(this, args)

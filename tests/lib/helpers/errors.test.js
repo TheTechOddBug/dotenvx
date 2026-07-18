@@ -63,6 +63,17 @@ t.test('#errors onePasswordFailed', ct => {
   ct.end()
 })
 
+t.test('#errors bitwardenFailed', ct => {
+  const result = new Errors({ message: 'Bitwarden Secrets Manager CLI failed to resolve API_KEY' }).bitwardenFailed()
+
+  t.equal(result.code, 'BITWARDEN_FAILED')
+  t.equal(result.message, '[BITWARDEN_FAILED] Bitwarden Secrets Manager CLI failed to resolve API_KEY')
+  t.equal(result.help, 'fix: [https://bitwarden.com/help/secrets-manager-cli/]')
+  t.equal(result.messageWithHelp, '[BITWARDEN_FAILED] Bitwarden Secrets Manager CLI failed to resolve API_KEY. fix: [https://bitwarden.com/help/secrets-manager-cli/]')
+
+  ct.end()
+})
+
 t.test('#errors missingEnvKeysFile falls back to .env.keys', ct => {
   const result = new Errors({}).missingEnvKeysFile()
 

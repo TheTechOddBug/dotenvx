@@ -38,6 +38,7 @@ async function validate () {
       noArmor,
       noKeychain,
       no1Password: options['1password'] === false || options.no1Password === true,
+      noBitwarden: options.bitwarden === false || options.noBitwarden === true,
       token: options.token,
       onStatus: (text) => {
         if (spinner && text) {

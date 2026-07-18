@@ -88,6 +88,7 @@ const config = function (options = {}) {
       noArmor,
       noKeychain,
       no1Password: options.no1Password,
+      noBitwarden: options.noBitwarden,
       noSpinner: options.noSpinner,
       token: options.token
     })
@@ -333,7 +334,8 @@ const get = async function (key, options = {}) {
     envKeysFile: options.envKeysFile,
     noArmor,
     noKeychain,
-    no1Password: options.no1Password
+    no1Password: options.no1Password,
+    noBitwarden: options.noBitwarden
   })
 
   if (options.mask !== undefined) {

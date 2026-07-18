@@ -202,6 +202,14 @@ export interface DotenvConfigOptions {
    */
   no1Password?: boolean;
 
+  /**
+   * Turn off Bitwarden Secrets Manager reference resolution.
+   *
+   * @default false
+   * @example require('@dotenvx/dotenvx').config({ noBitwarden: true })
+   */
+  noBitwarden?: boolean;
+
 }
 
 export type DotenvConfigEnv =
@@ -385,6 +393,14 @@ export interface GetOptions {
    * @example require('@dotenvx/dotenvx').get('KEY', { no1Password: true })
    */
   no1Password?: boolean;
+
+  /**
+   * Turn off Bitwarden Secrets Manager reference resolution.
+   *
+   * @default false
+   * @example require('@dotenvx/dotenvx').get('KEY', { noBitwarden: true })
+   */
+  noBitwarden?: boolean;
 
 }
 

@@ -10,6 +10,7 @@ const ISSUE_BY_CODE = {
   INVALID_PRIVATE_KEY: 'https://github.com/dotenvx/dotenvx/issues/465',
   INVALID_PUBLIC_KEY: 'https://github.com/dotenvx/dotenvx/issues/756',
   '1PASSWORD_FAILED': 'https://www.1password.dev/cli/get-started',
+  BITWARDEN_FAILED: 'https://bitwarden.com/help/secrets-manager-cli/',
   MALFORMED_ENCRYPTED_DATA: 'https://github.com/dotenvx/dotenvx/issues/467',
   MISPAIRED_PRIVATE_KEY: 'https://github.com/dotenvx/dotenvx/issues/752',
   MISSING_DIRECTORY: 'https://github.com/dotenvx/dotenvx/issues/758',
@@ -103,6 +104,18 @@ class Errors {
 
   onePasswordFailed () {
     const code = '1PASSWORD_FAILED'
+    const message = `[${code}] ${this.message}`
+    const help = `fix: [${ISSUE_BY_CODE[code]}]`
+
+    const e = new Error(message)
+    e.code = code
+    e.help = help
+    e.messageWithHelp = `${message}. ${help}`
+    return e
+  }
+
+  bitwardenFailed () {
+    const code = 'BITWARDEN_FAILED'
     const message = `[${code}] ${this.message}`
     const help = `fix: [${ISSUE_BY_CODE[code]}]`
 

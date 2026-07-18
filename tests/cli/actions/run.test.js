@@ -182,6 +182,20 @@ t.test('run --no-1password disables 1Password resolution', async ct => {
   ct.end()
 })
 
+t.test('run --no-bitwarden disables Bitwarden resolution', async ct => {
+  const options = { bitwarden: false }
+  const optsStub = sinon.stub().returns(options)
+  const fakeContext = { opts: optsStub, args: ['echo', ''], envs: [] }
+  sinon.stub(process, 'argv').value(['node', 'dotenvx', 'run', '--no-bitwarden', '--', 'echo', ''])
+
+  await run.call(fakeContext)
+
+  t.ok(envsResolverStub.called, 'envsResolver() called')
+  t.equal(envsResolverStub.firstCall.args[0].noBitwarden, true, 'envs resolver was called with noBitwarden true')
+
+  ct.end()
+})
+
 t.test('run --convention', async ct => {
   const optsStub = sinon.stub().returns({ convention: 'flow' })
   const fakeContext = { opts: optsStub, args: ['echo', ''], envs: [] }
