@@ -164,6 +164,8 @@ $ dotenvx run -- sh -c 'echo Hello $HELLO'
 Hello World
 ```
 
+see [1Password guide](https://dotenvx.com/docs/secrets-in-1password)
+
 </details>
 <details><summary>TypeScript 📘</summary><br>
 
