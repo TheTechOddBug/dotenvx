@@ -3,6 +3,7 @@ const proxyquire = require('proxyquire')
 
 t.test('resolves op:// values asynchronously', async ct => {
   const calls = []
+  const statuses = []
   const resolveOnePassword = proxyquire('../../../src/lib/helpers/resolveOnePassword', {
     child_process: {
       execFile: (command, args, options, callback) => {
@@ -12,14 +13,21 @@ t.test('resolves op:// values asynchronously', async ct => {
       execFileSync: () => ct.fail('should not call execFileSync')
     }
   })
-  const parsed = { SECRET: 'op://vault/item/password', PLAIN: 'value' }
+  const parsed = {
+    SECRET: 'op://vault/item/password',
+    SECOND_SECRET: 'op://vault/second/password',
+    PLAIN: 'value'
+  }
 
-  const result = await resolveOnePassword(parsed)
+  const result = await resolveOnePassword(parsed, { onStatus: status => statuses.push(status) })
 
   ct.equal(parsed.SECRET, 'super-secret')
+  ct.equal(parsed.SECOND_SECRET, 'super-secret')
   ct.equal(parsed.PLAIN, 'value')
   ct.same(calls[0][0], 'op')
   ct.same(calls[0][1], ['read', 'op://vault/item/password', '--no-newline'])
+  ct.same(calls[1][1], ['read', 'op://vault/second/password', '--no-newline'])
+  ct.same(statuses, ['awaiting 1password', 'injecting'])
   ct.same(result, { errors: [], unresolved: [] })
 })
 

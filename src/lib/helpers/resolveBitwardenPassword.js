@@ -2,6 +2,7 @@ const { execFile, execFileSync } = require('child_process')
 const Errors = require('./errors')
 const prompts = require('./prompts')
 const createSpinner = require('./createSpinner')
+const createElapsedStatus = require('./createElapsedStatus')
 
 const FIELDS = new Set(['username', 'password', 'uri'])
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -47,6 +48,7 @@ async function session (options) {
       output: process.stderr
     })
     createSpinner.resume()
+    if (options.startStatus) options.startStatus()
     const passwordEnv = 'DOTENVX_BITWARDEN_PASSWORD'
     options.session = secretValue(await execFileAsync('bw', ['unlock', '--passwordenv', passwordEnv, '--raw'], {
       encoding: 'utf8',
@@ -92,23 +94,36 @@ async function resolveBitwardenPassword (parsed, options = {}) {
   const errors = []
   const unresolved = []
   options.session = options.session || process.env.BW_SESSION
+  let stopStatus
+  const startStatus = () => {
+    if (!stopStatus) stopStatus = createElapsedStatus(options.onStatus, 'awaiting bitwarden')
+  }
+  options.startStatus = startStatus
 
-  for (const [key, value] of Object.entries(parsed)) {
-    if (!isSecretReference(value)) continue
+  try {
+    for (const [key, value] of Object.entries(parsed)) {
+      if (!isSecretReference(value)) continue
 
-    try {
-      const { itemId, field } = parseSecretReference(value)
-      const bwSession = await session(options)
-      const stdout = await execFileAsync('bw', ['get', field, itemId], {
-        encoding: 'utf8',
-        windowsHide: true,
-        env: { ...process.env, BW_SESSION: bwSession }
-      })
-      parsed[key] = secretValue(stdout)
-    } catch (error) {
-      errors.push(resolutionError(key, error))
-      unresolved.push(key)
-      delete parsed[key]
+      try {
+        const { itemId, field } = parseSecretReference(value)
+        if (options.session) startStatus()
+        const bwSession = await session(options)
+        const stdout = await execFileAsync('bw', ['get', field, itemId], {
+          encoding: 'utf8',
+          windowsHide: true,
+          env: { ...process.env, BW_SESSION: bwSession }
+        })
+        parsed[key] = secretValue(stdout)
+      } catch (error) {
+        errors.push(resolutionError(key, error))
+        unresolved.push(key)
+        delete parsed[key]
+      }
+    }
+  } finally {
+    if (stopStatus) {
+      stopStatus()
+      if (options.onStatus) options.onStatus('injecting')
     }
   }
 

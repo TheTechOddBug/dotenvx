@@ -72,7 +72,7 @@ function buildParseOptions ({ processEnv, overload, envKeysFilepath, provider, d
   return options
 }
 
-async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password, noBitwarden }) {
+async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, no1Password, noBitwarden, onStatus }) {
   const row = {}
   row.type = TYPE_ENV
   row.string = env.value
@@ -104,14 +104,14 @@ async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider
     row.existed = existed || {}
 
     if (!no1Password) {
-      const result = await resolveOnePassword(row.injected)
+      const result = await resolveOnePassword(row.injected, { onStatus })
       row.errors.push(...result.errors)
       for (const key of result.unresolved) delete row.parsed[key]
       Object.assign(row.parsed, row.injected)
     }
 
     if (!noBitwarden) {
-      const passwordResult = await resolveBitwardenPassword(row.injected)
+      const passwordResult = await resolveBitwardenPassword(row.injected, { onStatus })
       row.errors.push(...passwordResult.errors)
       for (const key of passwordResult.unresolved) delete row.parsed[key]
 
@@ -180,7 +180,7 @@ function injectEnvSync ({ env, overload, processEnv, envKeysFilepath, provider, 
   return row
 }
 
-async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password, noBitwarden }) {
+async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, provider, decryptor, readableFilepaths, no1Password, noBitwarden, onStatus }) {
   const row = {}
   row.type = TYPE_ENV_FILE
   row.filepath = env.value
@@ -215,14 +215,14 @@ async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, prov
     row.existed = existed || {}
 
     if (!no1Password) {
-      const result = await resolveOnePassword(row.injected)
+      const result = await resolveOnePassword(row.injected, { onStatus })
       row.errors.push(...result.errors)
       for (const key of result.unresolved) delete row.parsed[key]
       Object.assign(row.parsed, row.injected)
     }
 
     if (!noBitwarden) {
-      const passwordResult = await resolveBitwardenPassword(row.injected)
+      const passwordResult = await resolveBitwardenPassword(row.injected, { onStatus })
       row.errors.push(...passwordResult.errors)
       for (const key of passwordResult.unresolved) delete row.parsed[key]
 
@@ -320,7 +320,8 @@ async function envs (options = {}) {
         decryptor,
         readableFilepaths,
         no1Password: options.no1Password,
-        noBitwarden: options.noBitwarden
+        noBitwarden: options.noBitwarden,
+        onStatus: options.onStatus
       }))
     } else if (env.type === TYPE_ENV) {
       processedEnvs.push(await injectEnv({
@@ -331,7 +332,8 @@ async function envs (options = {}) {
         provider,
         decryptor,
         no1Password: options.no1Password,
-        noBitwarden: options.noBitwarden
+        noBitwarden: options.noBitwarden,
+        onStatus: options.onStatus
       }))
     }
   }

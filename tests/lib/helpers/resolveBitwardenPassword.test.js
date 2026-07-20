@@ -18,6 +18,7 @@ t.afterEach(ct => {
 
 t.test('resolves supported bw:// values asynchronously', async ct => {
   const calls = []
+  const statuses = []
   const resolveBitwardenPassword = proxyquire('../../../src/lib/helpers/resolveBitwardenPassword', {
     child_process: {
       execFile: (command, args, options, callback) => {
@@ -27,14 +28,21 @@ t.test('resolves supported bw:// values asynchronously', async ct => {
       execFileSync: () => ct.fail('should not call execFileSync')
     }
   })
-  const parsed = { SECRET: `bw://${ITEM_ID}/password`, PLAIN: 'value' }
+  const parsed = {
+    SECRET: `bw://${ITEM_ID}/password`,
+    SECOND_SECRET: `bw://${ITEM_ID}/username`,
+    PLAIN: 'value'
+  }
 
-  const result = await resolveBitwardenPassword(parsed)
+  const result = await resolveBitwardenPassword(parsed, { onStatus: status => statuses.push(status) })
 
   ct.equal(parsed.SECRET, 'super-secret')
+  ct.equal(parsed.SECOND_SECRET, 'super-secret')
   ct.equal(parsed.PLAIN, 'value')
   ct.equal(calls[0][0], 'bw')
   ct.same(calls[0][1], ['get', 'password', ITEM_ID])
+  ct.same(calls[1][1], ['get', 'username', ITEM_ID])
+  ct.same(statuses, ['awaiting bitwarden', 'injecting'])
   ct.same(result, { errors: [], unresolved: [] })
 })
 
@@ -46,9 +54,13 @@ t.test('reuses the session within one env row and unlocks again for the next row
   Object.defineProperty(process.stderr, 'isTTY', { configurable: true, value: true })
   const calls = []
   const spinnerCalls = []
+  const statuses = []
   const resolveBitwardenPassword = proxyquire('../../../src/lib/helpers/resolveBitwardenPassword', {
     './prompts': {
-      password: async () => 'master-password',
+      password: async () => {
+        ct.notMatch(statuses[statuses.length - 1] || '', /^awaiting bitwarden/, 'does not update status while prompting')
+        return 'master-password'
+      },
       '@noCallThru': true
     },
     './createSpinner': {
@@ -71,9 +83,9 @@ t.test('reuses the session within one env row and unlocks again for the next row
   }
 
   try {
-    const result = await resolveBitwardenPassword(parsed)
+    const result = await resolveBitwardenPassword(parsed, { onStatus: status => statuses.push(status) })
     const nextParsed = { USERNAME: `bw://${ITEM_ID}/username` }
-    const nextResult = await resolveBitwardenPassword(nextParsed)
+    const nextResult = await resolveBitwardenPassword(nextParsed, { onStatus: status => statuses.push(status) })
 
     ct.same(parsed, { PASSWORD: 'password-value', URI: 'uri-value' })
     ct.same(nextParsed, { USERNAME: 'username-value' })
@@ -85,6 +97,12 @@ t.test('reuses the session within one env row and unlocks again for the next row
       ['get', 'username', ITEM_ID]
     ])
     ct.same(spinnerCalls, ['pause', 'resume', 'pause', 'resume'])
+    ct.same(statuses, [
+      'awaiting bitwarden',
+      'injecting',
+      'awaiting bitwarden',
+      'injecting'
+    ])
     ct.equal(calls[0][2].env.DOTENVX_BITWARDEN_PASSWORD, 'master-password')
     ct.equal(calls[1][2].env.BW_SESSION, 'request-session')
     ct.equal(calls[2][2].env.BW_SESSION, 'request-session')
