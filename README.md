@@ -3419,6 +3419,7 @@ Set `mask: 0` to fully mask values.
 
 * [Claude](https://dotenvx.com/docs/secrets-in-claude)
 * [Codex](https://dotenvx.com/docs/secrets-in-codex)
+* [1Password](https://dotenvx.com/docs/secrets-in-1password)
 * [Node.js](https://dotenvx.com/docs/secrets-in-nodejs)
 * [Next.js](https://dotenvx.com/docs/secrets-in-nextjs)
 * [Express](https://dotenvx.com/docs/secrets-in-express)
@@ -3429,7 +3430,6 @@ Set `mask: 0` to fully mask values.
 * [Go](https://dotenvx.com/docs/secrets-in-go)
 * [PHP](https://dotenvx.com/docs/secrets-in-php)
 * [Rust](https://dotenvx.com/docs/secrets-in-rust)
-* [1Password](https://dotenvx.com/docs/secrets-in-1password)
 
 [Browse all quickstarts](https://dotenvx.com/docs)
 
