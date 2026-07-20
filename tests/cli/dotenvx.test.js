@@ -40,9 +40,9 @@ t.test('default help lists direct utility commands with ls first after keypair',
   ct.notMatch(commands, /scan\s+scan for leaked secrets/)
   ct.notMatch(commands, /ext\s+.*extensions/)
   ct.ok(commands.indexOf('keypair [KEY]') < commands.indexOf('ls [directory]'), 'ls is listed after keypair')
-  ct.ok(commands.indexOf('ls [directory]') < commands.indexOf('gitignore'), 'gitignore is listed after ls')
+  ct.ok(commands.indexOf('ls [directory]') < commands.indexOf('validate'), 'validate is listed after ls')
+  ct.ok(commands.indexOf('validate') < commands.indexOf('gitignore'), 'validate is listed before gitignore')
   ct.ok(commands.indexOf('gitignore') < commands.indexOf('genexample [directory]'), 'gitignore is listed before genexample')
-  ct.ok(commands.indexOf('genexample [directory]') < commands.indexOf('validate'), 'validate is listed after genexample')
   ct.ok(commands.indexOf('validate') < commands.indexOf('precommit [directory]'), 'validate is listed before precommit')
   ct.ok(commands.indexOf('precommit [directory]') < commands.indexOf('prebuild [directory]'), 'precommit is listed before prebuild')
 
