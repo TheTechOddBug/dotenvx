@@ -82,7 +82,7 @@ t.test('#run', ct => {
   const debugOutput = execShell(`${dotenvx} run --debug -- ${command}`)
   ct.equal(debugOutput.stdout, 'Hello World')
   ct.equal(debugOutput.stderr, modernizeDebugOutput(`Setting log level to debug
-options: {"env":[],"envFile":[],"redact":false,"validate":false,"strict":false,"armor":true,"native":true}
+options: {"env":[],"envFile":[],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"1password":true,"bitwarden":true}
 process command [${node} index.js]
 loading env from .env (${tempDir}/.env)
 {"HELLO":"World"}
@@ -108,7 +108,7 @@ t.test('#run - multiple .env files', ct => {
   const debugOutput = execShell(`${dotenvx} run -f .env.local -f .env --debug -- ${command}`)
   ct.equal(debugOutput.stdout, 'Hello local')
   ct.equal(debugOutput.stderr, modernizeDebugOutput(`Setting log level to debug
-options: {"env":[],"envFile":[".env.local",".env"],"redact":false,"validate":false,"strict":false,"armor":true,"native":true}
+options: {"env":[],"envFile":[".env.local",".env"],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"1password":true,"bitwarden":true}
 process command [${node} index.js]
 loading env from .env.local (${tempDir}/.env.local)
 {"HELLO":"local"}
@@ -138,7 +138,7 @@ t.test('#run - multiple .env files --overload', ct => {
   const debugOutput = execShell(`${dotenvx} run -f .env.local -f .env --overload --debug -- ${command}`)
   ct.equal(debugOutput.stdout, 'Hello World')
   ct.equal(debugOutput.stderr, modernizeDebugOutput(`Setting log level to debug
-options: {"env":[],"envFile":[".env.local",".env"],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"overload":true}
+options: {"env":[],"envFile":[".env.local",".env"],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"1password":true,"bitwarden":true,"overload":true}
 process command [${node} index.js]
 loading env from .env.local (${tempDir}/.env.local)
 {"HELLO":"local"}
@@ -194,7 +194,7 @@ t.test('#run - --env', ct => {
   const debugOutput = execShell(`${dotenvx} run --env HELLO=String -f .env --debug -- ${command}`)
   ct.equal(debugOutput.stdout, 'Hello String')
   ct.equal(debugOutput.stderr, modernizeDebugOutput(`Setting log level to debug
-options: {"env":["HELLO=String"],"envFile":[".env"],"redact":false,"validate":false,"strict":false,"armor":true,"native":true}
+options: {"env":["HELLO=String"],"envFile":[".env"],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"1password":true,"bitwarden":true}
 process command [${node} index.js]
 loading env from string (HELLO=String)
 {"HELLO":"String"}
@@ -227,7 +227,7 @@ t.test('#run - encrypted .env', ct => {
   const debugOutput = execShell(`${dotenvx} run --debug -- ${command}`)
   ct.equal(debugOutput.stdout, 'Hello encrypted')
   ct.equal(debugOutput.stderr, modernizeDebugOutput(`Setting log level to debug
-options: {"env":[],"envFile":[],"redact":false,"validate":false,"strict":false,"armor":true,"native":true}
+options: {"env":[],"envFile":[],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"1password":true,"bitwarden":true}
 process command [${node} index.js]
 loading env from .env (${tempDir}/.env)
 {"DOTENV_PUBLIC_KEY":"${DOTENV_PUBLIC_KEY}","HELLO":"encrypted"}
@@ -268,7 +268,7 @@ t.test('#run - encrypted .env with no .env.keys', ct => {
   o = execShell(`${dotenvx} run --debug -- ${command}`)
   ct.equal(o.stdout, `Hello ${encrypted}`)
   ct.equal(o.stderr, modernizeDebugOutput(`Setting log level to debug
-options: {"env":[],"envFile":[],"redact":false,"validate":false,"strict":false,"armor":true,"native":true}
+options: {"env":[],"envFile":[],"redact":false,"validate":false,"strict":false,"armor":true,"native":true,"1password":true,"bitwarden":true}
 process command [${node} index.js]
 loading env from .env (${tempDir}/.env)
 ☠ [DECRYPTION_FAILED] could not decrypt HELLO. fix: [https://github.com/dotenvx/dotenvx/issues/757]

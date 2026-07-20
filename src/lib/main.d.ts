@@ -194,6 +194,22 @@ export interface DotenvConfigOptions {
    */
   noNative?: boolean;
 
+  /**
+   * Turn off 1Password secret reference resolution.
+   *
+   * @default false
+   * @example require('@dotenvx/dotenvx').config({ no1Password: true })
+   */
+  no1Password?: boolean;
+
+  /**
+   * Turn off Bitwarden secret reference resolution.
+   *
+   * @default false
+   * @example require('@dotenvx/dotenvx').config({ noBitwarden: true })
+   */
+  noBitwarden?: boolean;
+
 }
 
 export type DotenvConfigEnv =
@@ -369,6 +385,22 @@ export interface GetOptions {
    * @example require('@dotenvx/dotenvx').get('KEY', { noNative: true })
    */
   noNative?: boolean;
+
+  /**
+   * Turn off 1Password secret reference resolution.
+   *
+   * @default false
+   * @example require('@dotenvx/dotenvx').get('KEY', { no1Password: true })
+   */
+  no1Password?: boolean;
+
+  /**
+   * Turn off Bitwarden secret reference resolution.
+   *
+   * @default false
+   * @example require('@dotenvx/dotenvx').get('KEY', { noBitwarden: true })
+   */
+  noBitwarden?: boolean;
 
 }
 

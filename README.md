@@ -958,6 +958,30 @@ Keep `.env.keys` unreadable by agents, while still letting them safely update en
 
 Advanced CLI commands.
 
+<details><summary>`run` - 1Password secret references</summary><br>
+
+Resolve [1Password secret references](https://developer.1password.com/docs/cli/secrets-reference-syntax/) directly from your `.env` file.
+
+```ini
+# .env
+API_KEY=op://Personal/my_api_key/password
+```
+
+Install the [1Password CLI](https://developer.1password.com/docs/cli/get-started/) and authenticate with `op`. Dotenvx automatically reads `op://` values through `op read` before injecting them.
+
+```sh
+$ dotenvx run -- node index.js
+```
+
+Use `--no-1password` to leave `op://` values unresolved.
+
+```sh
+$ dotenvx run --no-1password -- node index.js
+```
+
+The same flag is available for `dotenvx get` and `dotenvx validate`.
+
+</details>
 <details><summary>`run` - Variable Expansion</summary><br>
 
 Reference and expand variables already on your machine for use in your .env file.
@@ -3226,6 +3250,30 @@ require('@dotenvx/dotenvx').config({noArmor: true})
 ```
 
 </details>
+<details><summary>`config(no1Password:)` - no1Password</summary><br>
+
+By default, `config()` automatically resolves `op://` values through the installed [1Password CLI](https://developer.1password.com/docs/cli/get-started/).
+
+```ini
+# .env
+API_KEY=op://Personal/my_api_key/password
+```
+
+```js
+// index.js
+require('@dotenvx/dotenvx').config()
+
+console.log(process.env.API_KEY)
+```
+
+Set `no1Password` to leave `op://` values unresolved and avoid calling `op`.
+
+```js
+// index.js
+require('@dotenvx/dotenvx').config({no1Password: true})
+```
+
+</details>
 <details><summary>`parse(src)`</summary><br>
 
 Parse a `.env` string directly in node.js code.
@@ -3385,7 +3433,6 @@ Set `mask: 0` to fully mask values.
   * [GitHub Actions](https://dotenvx.com/docs/cis/github-actions)
 * [Password Managers](https://dotenvx.com/docs#password-managers)
   * [1Password](https://dotenvx.com/docs/guides/1password)
-  * [Bitwarden](https://dotenvx.com/docs/guides/bitwarden)
 * [Background Jobs](https://dotenvx.com/docs#background-jobs)
   * [Trigger.dev](https://dotenvx.com/docs/background-jobs/triggerdotdev)
 * [Package Managers](https://dotenvx.com/docs#package-managers)

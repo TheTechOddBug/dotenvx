@@ -1,5 +1,6 @@
 const FRAMES = ['◇', '⬖', '◆', '⬗']
 const FRAME_INTERVAL_MS = 80
+let activeSpinner
 
 async function createSpinner (options = {}) {
   const stream = process.stderr
@@ -11,7 +12,7 @@ async function createSpinner (options = {}) {
   const frames = options.frames || FRAMES
 
   const { default: yoctoSpinner } = await import('yocto-spinner')
-  return yoctoSpinner({
+  activeSpinner = yoctoSpinner({
     text,
     spinner: {
       frames,
@@ -19,6 +20,21 @@ async function createSpinner (options = {}) {
     },
     stream
   }).start()
+
+  return activeSpinner
+}
+
+createSpinner.stop = function () {
+  if (activeSpinner) activeSpinner.stop()
+  activeSpinner = null
+}
+
+createSpinner.pause = function () {
+  if (activeSpinner) activeSpinner.stop()
+}
+
+createSpinner.resume = function () {
+  if (activeSpinner) activeSpinner.start()
 }
 
 module.exports = createSpinner
