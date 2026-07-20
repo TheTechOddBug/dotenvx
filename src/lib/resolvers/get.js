@@ -53,6 +53,8 @@ function buildOptions (options, processEnv) {
     noKeychain: options.noKeychain,
     no1Password: options.no1Password,
     noBitwarden: options.noBitwarden,
+    interactiveBitwarden: options.interactiveBitwarden,
+    onBitwardenPrompt: options.onBitwardenPrompt,
     onStatus: options.onStatus
   }
 }

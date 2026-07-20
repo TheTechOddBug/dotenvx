@@ -993,13 +993,13 @@ PASSWORD=bw://7ac9cae8-5067-4faf-b6ab-acfd00e2c328/password
 LOGIN_URI=bw://7ac9cae8-5067-4faf-b6ab-acfd00e2c328/uri
 ```
 
-Install and unlock the [Bitwarden Password Manager CLI](https://bitwarden.com/help/cli/), then export its session into the current shell. Dotenvx supports exact item UUIDs and the `username`, `password`, and `uri` fields.
+Install the [Bitwarden Password Manager CLI](https://bitwarden.com/help/cli/). When run interactively, dotenvx asks Bitwarden to unlock and keeps the returned session in memory for the current command. Dotenvx supports exact item UUIDs and the `username`, `password`, and `uri` fields.
 
 ```sh
 $ export BW_SESSION="$(bw unlock --raw)"
 ```
 
-Dotenvx fails immediately when `BW_SESSION` is missing rather than opening an interactive master-password prompt.
+For non-interactive commands and programmatic API calls, unlock Bitwarden ahead of time by exporting `BW_SESSION`.
 
 ```sh
 $ dotenvx run -- node index.js

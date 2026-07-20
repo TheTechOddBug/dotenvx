@@ -1,5 +1,6 @@
 const { execFile, execFileSync } = require('child_process')
 const Errors = require('./errors')
+const prompts = require('./prompts')
 
 const FIELDS = new Set(['username', 'password', 'uri'])
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -31,8 +32,30 @@ function parseSecretReference (value) {
   return { itemId, field }
 }
 
-function requireSession () {
-  if (!process.env.BW_SESSION) {
+async function session (options) {
+  if (options.session) return options.session
+
+  if (options.interactive && process.stdin.isTTY && process.stderr.isTTY) {
+    if (options.onPrompt) options.onPrompt()
+    const password = await prompts.password({
+      message: 'Bitwarden master password',
+      prefix: '◇',
+      separator: '='
+    }, {
+      input: process.stdin,
+      output: process.stderr
+    })
+    const passwordEnv = 'DOTENVX_BITWARDEN_PASSWORD'
+    options.session = secretValue(await execFileAsync('bw', ['unlock', '--passwordenv', passwordEnv, '--raw'], {
+      encoding: 'utf8',
+      windowsHide: true,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, [passwordEnv]: password }
+    }))
+    return options.session
+  }
+
+  if (!options.session) {
     const error = new Error('Bitwarden Password Manager requires an unlocked BW_SESSION')
     error.code = 'BW_SESSION_MISSING'
     throw error
@@ -63,19 +86,21 @@ function secretValue (stdout) {
   return stdout.replace(/\r?\n$/, '')
 }
 
-async function resolveBitwardenPassword (parsed) {
+async function resolveBitwardenPassword (parsed, options = {}) {
   const errors = []
   const unresolved = []
+  options.session = options.session || process.env.BW_SESSION
 
   for (const [key, value] of Object.entries(parsed)) {
     if (!isSecretReference(value)) continue
 
     try {
       const { itemId, field } = parseSecretReference(value)
-      requireSession()
+      const bwSession = await session(options)
       const stdout = await execFileAsync('bw', ['get', field, itemId], {
         encoding: 'utf8',
-        windowsHide: true
+        windowsHide: true,
+        env: { ...process.env, BW_SESSION: bwSession }
       })
       parsed[key] = secretValue(stdout)
     } catch (error) {
@@ -97,7 +122,11 @@ function resolveBitwardenPasswordSync (parsed) {
 
     try {
       const { itemId, field } = parseSecretReference(value)
-      requireSession()
+      if (!process.env.BW_SESSION) {
+        const error = new Error('Bitwarden Password Manager requires an unlocked BW_SESSION')
+        error.code = 'BW_SESSION_MISSING'
+        throw error
+      }
       const stdout = execFileSync('bw', ['get', field, itemId], {
         encoding: 'utf8',
         windowsHide: true,

@@ -40,6 +40,8 @@ async function get (key) {
       noKeychain,
       no1Password: options['1password'] === false || options.no1Password === true,
       noBitwarden: options.bitwarden === false || options.noBitwarden === true,
+      interactiveBitwarden: true,
+      onBitwardenPrompt: () => spinner && spinner.stop(),
       onStatus: (text) => {
         if (spinner && text) {
           spinner.text = text

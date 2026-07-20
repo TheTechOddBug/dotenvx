@@ -120,6 +120,8 @@ async function run () {
       noKeychain,
       no1Password: options['1password'] === false || options.no1Password === true,
       noBitwarden: options.bitwarden === false || options.noBitwarden === true,
+      interactiveBitwarden: true,
+      onBitwardenPrompt: () => spinner && spinner.stop(),
       token: options.token,
       command: commandArgs,
       onStatus: (text) => {
