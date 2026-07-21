@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.16.0...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.16.1...main)
+
+## [2.16.1](https://github.com/dotenvx/dotenvx/compare/v2.16.0...v2.16.1) (2026-07-21)
+
+### Changed
+
+* Fix: Do not report child error - let child do so. ([#914](https://github.com/dotenvx/dotenvx/pull/914))
 
 ## [2.16.0](https://github.com/dotenvx/dotenvx/compare/v2.15.1...v2.16.0) (2026-07-21)
 
