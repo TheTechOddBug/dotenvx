@@ -117,6 +117,36 @@ t.test('reuses the session within one env row and unlocks again for the next row
   }
 })
 
+t.test('propagates prompt cancellation without resolving it as a Bitwarden failure', async ct => {
+  delete process.env.BW_SESSION
+  const stdinTTY = Object.getOwnPropertyDescriptor(process.stdin, 'isTTY')
+  const stderrTTY = Object.getOwnPropertyDescriptor(process.stderr, 'isTTY')
+  Object.defineProperty(process.stdin, 'isTTY', { configurable: true, value: true })
+  Object.defineProperty(process.stderr, 'isTTY', { configurable: true, value: true })
+  const resolveBitwardenPassword = proxyquire('../../../src/lib/helpers/resolveBitwardenPassword', {
+    './prompts': {
+      password: async () => {
+        const error = new Error('prompt cancelled')
+        error.code = 'PROMPT_CANCELLED'
+        throw error
+      },
+      '@noCallThru': true
+    }
+  })
+
+  try {
+    await ct.rejects(
+      resolveBitwardenPassword({ PASSWORD: `bw://${ITEM_ID}/password` }),
+      { code: 'PROMPT_CANCELLED' }
+    )
+  } finally {
+    if (stdinTTY) Object.defineProperty(process.stdin, 'isTTY', stdinTTY)
+    else delete process.stdin.isTTY
+    if (stderrTTY) Object.defineProperty(process.stderr, 'isTTY', stderrTTY)
+    else delete process.stderr.isTTY
+  }
+})
+
 t.test('resolves username, password, and uri synchronously without a shell', ct => {
   const calls = []
   const resolveBitwardenPassword = proxyquire('../../../src/lib/helpers/resolveBitwardenPassword', {

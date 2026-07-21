@@ -118,6 +118,7 @@ async function injectEnv ({ env, overload, processEnv, envKeysFilepath, provider
 
     inject(processEnv, row.parsed)
   } catch (e) {
+    if (e.code === 'PROMPT_CANCELLED') throw e
     row.errors = [e]
   }
 
@@ -225,6 +226,7 @@ async function injectEnvFile ({ env, overload, processEnv, envKeysFilepath, prov
 
     inject(processEnv, parsed)
   } catch (e) {
+    if (e.code === 'PROMPT_CANCELLED') throw e
     if (e.code === 'ENOENT' || e.code === 'EISDIR') {
       row.errors = [new Errors({ envFilepath: env.value, filepath }).missingEnvFile()]
     } else {

@@ -117,6 +117,7 @@ async function resolveBitwardenPassword (parsed, options = {}) {
         })
         parsed[key] = secretValue(stdout)
       } catch (error) {
+        if (error && error.code === 'PROMPT_CANCELLED') throw error
         errors.push(resolutionError(key, error))
         unresolved.push(key)
       }
