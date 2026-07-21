@@ -3380,21 +3380,6 @@ require('@dotenvx/dotenvx').config({noBitwarden: true})
 ```
 
 </details>
-<details><summary>Environment Variable Config Overrides</summary><br>
-
-```ini
-BW_SESSION=
-DOTENV_CONFIG_CONVENTION=
-DOTENV_CONFIG_QUIET=
-DOTENV_ENV=
-DOTENV_PRIVATE_KEY=
-DOTENV_PRIVATE_KEY_<ENV>=
-DOTENVX_CONFIG=
-DOTENVX_NO_ARMOR=
-NODE_ENV=
-```
-
-</details>
 <details><summary>`parse(src)`</summary><br>
 
 Parse a `.env` string directly in node.js code.
@@ -3503,6 +3488,22 @@ abcdef******
 Set `mask: 0` to fully mask values.
 
 </details>
+
+### Config ⚙️
+
+There are global settings available that can be configured as environment variables.
+
+```ini
+BW_SESSION=
+DOTENV_CONFIG_CONVENTION=
+DOTENV_CONFIG_QUIET=
+DOTENV_ENV=
+DOTENV_PRIVATE_KEY=
+DOTENV_PRIVATE_KEY_<ENV>=
+DOTENVX_CONFIG=
+DOTENVX_NO_ARMOR=
+NODE_ENV=
+```
 
 &nbsp;
 
