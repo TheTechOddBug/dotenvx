@@ -167,6 +167,19 @@ Hello World
 see [1Password guide](https://dotenvx.com/docs/secrets-in-1password)
 
 </details>
+<details><summary>Bitwarden 🔑</summary><br>
+
+Run with secrets resolved directly from Bitwarden Password Manager.
+
+```sh
+$ echo 'HELLO="bw://My Hello Login/password"' > .env
+$ dotenvx run -- sh -c 'echo Hello $HELLO'
+Hello World
+```
+
+Install the [Bitwarden Password Manager CLI](https://bitwarden.com/help/cli/) before running dotenvx.
+
+</details>
 <details><summary>TypeScript 📘</summary><br>
 
 ```json
@@ -1189,6 +1202,38 @@ Use `--no-1password` to leave `op://` values unresolved.
 
 ```sh
 $ dotenvx run --no-1password -- node index.js
+```
+
+The same flag is available for `dotenvx get` and `dotenvx validate`.
+
+</details>
+<details><summary>`run` - Bitwarden</summary><br>
+
+Resolve `bw://` references directly from your `.env` file through the [Bitwarden Password Manager CLI](https://bitwarden.com/help/cli/).
+
+```ini
+# .env
+API_KEY="bw://My GitHub Account/password"
+```
+
+The reference format is `bw://<item>/<field>`. The item can be a human-readable Bitwarden search term or an exact item UUID. Quote the dotenv value when the item name contains spaces.
+
+Supported fields are:
+
+- `username`
+- `password`
+- `uri`
+
+When the vault is locked in an interactive terminal, dotenvx prompts for your Bitwarden master password.
+
+Human-readable names are convenient, but must identify a single item. If multiple items match, Bitwarden returns an error. Use the item UUID when you need an unambiguous reference.
+
+If Bitwarden cannot resolve a reference, dotenvx reports the error and leaves the original `bw://` value unresolved.
+
+Use `--no-bitwarden` to skip Bitwarden resolution intentionally.
+
+```sh
+$ dotenvx run --no-bitwarden -- node index.js
 ```
 
 The same flag is available for `dotenvx get` and `dotenvx validate`.
@@ -3308,6 +3353,30 @@ Set `no1Password` to leave `op://` values unresolved and avoid calling `op`.
 ```js
 // index.js
 require('@dotenvx/dotenvx').config({no1Password: true})
+```
+
+</details>
+<details><summary>`config(noBitwarden:)` - noBitwarden</summary><br>
+
+By default, `config()` automatically resolves `bw://` values through the installed [Bitwarden Password Manager CLI](https://bitwarden.com/help/cli/).
+
+```ini
+# .env
+API_KEY="bw://My GitHub Account/password"
+```
+
+```js
+// index.js
+require('@dotenvx/dotenvx').config()
+
+console.log(process.env.API_KEY)
+```
+
+Set `noBitwarden` to leave `bw://` values unresolved and avoid calling `bw`.
+
+```js
+// index.js
+require('@dotenvx/dotenvx').config({noBitwarden: true})
 ```
 
 </details>
