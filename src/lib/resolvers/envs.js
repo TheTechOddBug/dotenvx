@@ -301,6 +301,8 @@ async function envs (options = {}) {
   const readableFilepaths = new Set()
   const processEnv = options.processEnv || process.env
   const envKeysFilepath = options.envKeysFilepath || options.envKeysFile || null
+  const no1Password = options.no1Password === true || process.env.DOTENVX_NO_1PASSWORD === 'true'
+  const noBitwarden = options.noBitwarden === true || process.env.DOTENVX_NO_BITWARDEN === 'true'
   const provider = await providers(options)
   const decryptor = await decryptors(options)
   for (const env of options.envs || []) {
@@ -313,8 +315,8 @@ async function envs (options = {}) {
         provider,
         decryptor,
         readableFilepaths,
-        no1Password: options.no1Password,
-        noBitwarden: options.noBitwarden,
+        no1Password,
+        noBitwarden,
         onStatus: options.onStatus
       }))
     } else if (env.type === TYPE_ENV) {
@@ -325,8 +327,8 @@ async function envs (options = {}) {
         envKeysFilepath,
         provider,
         decryptor,
-        no1Password: options.no1Password,
-        noBitwarden: options.noBitwarden,
+        no1Password,
+        noBitwarden,
         onStatus: options.onStatus
       }))
     }
@@ -343,6 +345,8 @@ function envsSync (options = {}) {
   const readableFilepaths = new Set()
   const processEnv = options.processEnv || process.env
   const envKeysFilepath = options.envKeysFilepath || options.envKeysFile || null
+  const no1Password = options.no1Password === true || process.env.DOTENVX_NO_1PASSWORD === 'true'
+  const noBitwarden = options.noBitwarden === true || process.env.DOTENVX_NO_BITWARDEN === 'true'
   const provider = providers.sync(options)
   const decryptor = decryptors.sync(options)
 
@@ -356,8 +360,8 @@ function envsSync (options = {}) {
         provider,
         decryptor,
         readableFilepaths,
-        no1Password: options.no1Password,
-        noBitwarden: options.noBitwarden
+        no1Password,
+        noBitwarden
       }))
     } else if (env.type === TYPE_ENV) {
       processedEnvs.push(injectEnvSync({
@@ -367,8 +371,8 @@ function envsSync (options = {}) {
         envKeysFilepath,
         provider,
         decryptor,
-        no1Password: options.no1Password,
-        noBitwarden: options.noBitwarden
+        no1Password,
+        noBitwarden
       }))
     }
   }

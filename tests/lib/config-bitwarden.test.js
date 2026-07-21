@@ -85,6 +85,28 @@ t.test('config leaves bw:// values unresolved with noBitwarden', ct => {
   ct.end()
 })
 
+t.test('config leaves bw:// values unresolved with DOTENVX_NO_BITWARDEN', ct => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-bitwarden-'))
+  const envFile = path.join(dir, '.env')
+  const processEnv = {}
+  const original = process.env.DOTENVX_NO_BITWARDEN
+
+  fs.writeFileSync(envFile, `PASSWORD=bw://${ITEM_ID}/password\n`)
+  process.env.DOTENVX_NO_BITWARDEN = 'true'
+
+  try {
+    const result = dotenvx.config({ path: envFile, processEnv, quiet: true, strict: true })
+
+    ct.equal(result.parsed.PASSWORD, `bw://${ITEM_ID}/password`)
+    ct.equal(processEnv.PASSWORD, `bw://${ITEM_ID}/password`)
+  } finally {
+    if (original === undefined) delete process.env.DOTENVX_NO_BITWARDEN
+    else process.env.DOTENVX_NO_BITWARDEN = original
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+  ct.end()
+})
+
 t.test('config reports a failed bw:// value and still loads the rest of the file', ct => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotenvx-bitwarden-'))
   const envFile = path.join(dir, '.env')

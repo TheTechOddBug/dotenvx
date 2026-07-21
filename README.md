@@ -3497,8 +3497,9 @@ There are global settings available that can be configured as environment variab
 BW_SESSION=
 DOTENV_CONFIG_CONVENTION=
 DOTENV_CONFIG_QUIET=
-DOTENVX_CONFIG=
+DOTENVX_NO_1PASSWORD=
 DOTENVX_NO_ARMOR=
+DOTENVX_NO_BITWARDEN=
 ```
 
 &nbsp;
