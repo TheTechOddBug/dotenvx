@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.15.1...main)
+[Unreleased](https://github.com/dotenvx/dotenvx/compare/v2.16.0...main)
+
+## [2.16.0](https://github.com/dotenvx/dotenvx/compare/v2.15.1...v2.16.0) (2026-07-21)
+
+### Added
+
+* Add support for `-ek` and `-ik` to `dotenvx get` ([#913](https://github.com/dotenvx/dotenvx/pull/913))
 
 ## [2.15.1](https://github.com/dotenvx/dotenvx/compare/v2.15.0...v2.15.1) (2026-07-20)
 
