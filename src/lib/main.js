@@ -26,6 +26,7 @@ const decryptKeyValue = require('./helpers/cryptography/decryptKeyValue')
 const Errors = require('./helpers/errors')
 const normalizeDotenvConfigQuiet = require('./helpers/normalizeDotenvConfigQuiet')
 const normalizeDotenvConfigConvention = require('./helpers/normalizeDotenvConfigConvention')
+const normalizeDotenvConfigIgnore = require('./helpers/normalizeDotenvConfigIgnore')
 const mask = require('./helpers/mask')
 const maskProcessedEnvs = require('./helpers/maskProcessedEnvs')
 
@@ -43,6 +44,7 @@ function uniqueInjectedKeys (processedEnvs) {
 const config = function (options = {}) {
   options = normalizeDotenvConfigQuiet(options)
   options = normalizeDotenvConfigConvention(options)
+  options = normalizeDotenvConfigIgnore(options)
 
   // allow user to set processEnv to write to
   let processEnv = process.env

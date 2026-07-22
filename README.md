@@ -1586,6 +1586,11 @@ $ dotenvx run -f .env.missing --ignore=MISSING_ENV_FILE -- node index.js
 ...
 ```
 
+You can also set `DOTENV_CONFIG_IGNORE="MISSING_ENV_FILE"`. It is parsed as a comma-separated list.
+
+```sh
+$ DOTENV_CONFIG_IGNORE="MISSING_ENV_FILE,OTHER_ERROR_CODE" dotenvx run -f .env.missing -- node index.js
+```
 </details>
 <details><summary>`run --convention=nextjs`</summary><br>
 
