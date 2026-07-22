@@ -1,9 +1,9 @@
-function normalizeDotenvConfigIgnore(
+function normalizeDotenvConfigIgnore (
   /** @type {import('../main').DotenvConfigOptions} */ options
 ) {
   if (process.env.DOTENV_CONFIG_IGNORE) {
-    const ignoreVariables = (process.env.DOTENV_CONFIG_IGNORE).split(',');
-    options.ignore ??= []; // Retain ignore from explicit arguments
+    const ignoreVariables = (process.env.DOTENV_CONFIG_IGNORE).split(',')
+    options.ignore ??= [] // Retain ignore from explicit arguments
     options.ignore.push(...ignoreVariables)
   }
 

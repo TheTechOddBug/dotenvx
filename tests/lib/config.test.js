@@ -215,25 +215,25 @@ t.test('logs any errors thrown from reading file or parsing when in debug mode',
 t.test('respects DOTENV_CONFIG_IGNORE environment variable and does not log matching error', ct => {
   const consoleErrorStub = sinon.stub(console, 'error')
 
-  const missingEnvFileName = './.env.fake';
-  const missingEnvFileError = new Errors({ envFilepath: missingEnvFileName }).missingEnvFile().messageWithHelp;
+  const missingEnvFileName = './.env.fake'
+  const missingEnvFileError = new Errors({ envFilepath: missingEnvFileName }).missingEnvFile().messageWithHelp
   const callConfig = (options) => dotenvx.config({ path: missingEnvFileName, ...options })
 
   // control path
   callConfig()
   ct.ok(consoleErrorStub.calledWithMatch(sinon.match(missingEnvFileError)))
-  consoleErrorStub.resetHistory();
+  consoleErrorStub.resetHistory()
 
-  process.env.DOTENV_CONFIG_IGNORE = 'MISSING_ENV_FILE';
+  process.env.DOTENV_CONFIG_IGNORE = 'MISSING_ENV_FILE'
   // golden path
   callConfig()
   ct.notOk(consoleErrorStub.calledWithMatch(sinon.match(missingEnvFileError)))
-  consoleErrorStub.resetHistory();
+  consoleErrorStub.resetHistory()
 
   // merge with existing options path
   callConfig({ ignore: ['FAKE_ERROR'] })
   ct.notOk(consoleErrorStub.calledWithMatch(sinon.match(missingEnvFileError)))
-  consoleErrorStub.resetHistory();
+  consoleErrorStub.resetHistory()
 
   for (const ignoreString of [
     'MISSING_ENV_FILE', // Golden path
@@ -242,12 +242,12 @@ t.test('respects DOTENV_CONFIG_IGNORE environment variable and does not log matc
     'FAKE_ERROR,MISSING_ENV_FILE,FAKE_ERROR_2', // Golden path: multiple with MISSING_ENV_FILE not first or last
     'MISSING_ENV_FILE,', // Diabolical path: trailing comma
     ',MISSING_ENV_FILE', // Diabolical path: leading comma
-    ',MISSING_ENV_FILE,', // Diabolical path: leading and trailing comma
+    ',MISSING_ENV_FILE,' // Diabolical path: leading and trailing comma
   ]) {
-    process.env.DOTENV_CONFIG_IGNORE = ignoreString;
+    process.env.DOTENV_CONFIG_IGNORE = ignoreString
     callConfig()
     ct.notOk(consoleErrorStub.calledWithMatch(sinon.match(missingEnvFileError)))
-    consoleErrorStub.resetHistory();
+    consoleErrorStub.resetHistory()
   }
   consoleErrorStub.restore()
 
